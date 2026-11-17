@@ -47,6 +47,20 @@ This repository is a systems/inference project, not a medical product.
 - Stock llama.cpp with CPU weight repacking uses **4,984 MiB**; with
   `--no-repack`, **2,624 MiB** — a 2.36 GiB penalty for a second copy.
 
+## What is in this repository
+
+| Included | Not included (by design) |
+| --- | --- |
+| Engine source: `native/` (reader, arena, planner, scheduler, C API) | Prebuilt `libmsr_engine.so` / `msr-cli` — built locally by `scripts/setup.sh`; binaries are architecture-specific and go stale |
+| SDK: `sdk/` (CMake package, reference CLI, host example) | Model weights (`*.gguf`) — 2.49 GB, separately licensed assets |
+| Vendored llama.cpp pin (`.gitmodules`) + 4-file hook patch in `patches/` | llama.cpp source in the outer tree — fetched as a submodule |
+| Docs, benchmark data, tests, setup script | Build trees (`build*`, git-ignored) |
+
+GitHub's web view shows `third_party/llama.cpp` as an **empty folder** until the
+submodule is initialised; that is expected. Use `git clone --recursive` or just
+run `scripts/setup.sh`, which fetches it and applies the patch. No emulator is
+needed on a Linux desktop — the build is native C++/CMake.
+
 ## Getting started
 
 ```sh
