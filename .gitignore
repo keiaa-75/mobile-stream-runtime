@@ -18,5 +18,6 @@ __pycache__/
 *.log
 .DS_Store
 
-# Static dependency build (regenerate via docs/native-api.md)
+# Build trees (regenerate via docs/FRAMEWORK.md)
 /build-static/
+/build-sdk/

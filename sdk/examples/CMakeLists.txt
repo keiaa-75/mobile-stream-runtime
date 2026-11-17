@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.16)
+project(msr_example LANGUAGES CXX)
+find_package(msr REQUIRED CONFIG)
+add_executable(minimal minimal.cpp)
+target_link_libraries(minimal PRIVATE msr::engine)

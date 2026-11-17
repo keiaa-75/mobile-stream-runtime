@@ -643,8 +643,28 @@ replacement (2–4 day estimate).
 
 ### Next step (not started)
 
-Extract the engine lifecycle into a C framework API (`msr_engine_*`), then fix
-the high-priority items in `LIMITATION.md`.
-Phase 5 (thermal-aware A/B) is still open; the interleaved sweeps reduce but do
-not remove thermal noise.
+Phase 5 (text evaluation at 2K/4K/8K with thermal control) is next; the
+interleaved sweeps reduce but do not remove thermal noise.
 
+
+## 10. Phase 4 complete — C framework API and installable SDK (2026-11-17)
+
+- New public C API `native/include/msr/engine/engine.h` with opaque handle,
+  config, `create/load/generate/cancel/get_stats/last_error/version`. No llama,
+  ggml or provider type crosses the boundary.
+- Implementation `native/src/engine/engine.cpp`: chat-template formatting,
+  greedy/sampled generation, per-token callback, explicit `MSR_ABORTED`,
+  thread-safe cancellation and whole-process memory/thermal stats.
+- `sdk/` builds one `libmsr_engine.so` (static llama + provider + core),
+  `msr-cli`, an installable CMake package (`find_package(msr)`, `msr::engine`)
+  and a minimal host example. `docs/FRAMEWORK.md` is the guide.
+- Verified on the reference device: byte-identical greedy output, 1 GiB budget
+  respected (28 layers streamed), both cancellation paths clean, installed
+  example built and ran. `BENCHMARKS.md` §12.
+- **Bug found and fixed:** default llama `load_mode = AUTO` mapped the whole
+  GGUF and inflated VmHWM to ~3.2 GiB; the engine now forces `load_mode = NONE`
+  and `lazy_mode = OFF`, bringing peak to 1,301.7 MiB with the same output.
+  Recorded in `LIMITATION.md`.
+
+**Phase 4 gate: PASS for the framework SDK.** Remaining work is Phase 5
+(text evaluation) and the fixes listed in `LIMITATION.md`.

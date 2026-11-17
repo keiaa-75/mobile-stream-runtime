@@ -12,7 +12,7 @@ This repository is a systems/inference project, not a medical product.
 - Project context: `/storage/emulated/0/Download/gemma/mobile_storage_streamed_llm_runtime_context.md`
 - Model assets (12 GB target): `/storage/emulated/0/Download/gemma/`
 
-## Current status — framework/SDK (Phases 1–3 complete)
+## Current status — framework/SDK (Phases 1–4 complete)
 
 | Deliverable | State |
 | --- | --- |
@@ -21,7 +21,7 @@ This repository is a systems/inference project, not a medical product.
 | `docs/streaming-design.md` | draft (hybrid residency planner) |
 | `docs/model-inventory/` | full GGUF parse for both files |
 | `MODEL_COMPATIBILITY.md` | written, Phase 1 read evidence included |
-| `BENCHMARKS.md` | storage, mmap, KV model, stock baseline, arena streaming (§10), async prefetch (§11) |
+| `BENCHMARKS.md` | storage, mmap, KV model, stock baseline, arena streaming (§10), async prefetch (§11), C API SDK (§12) |
 | Conventional build baseline | done: ~2.62 GiB peak RSS, ~12 tok/s at 2K; see `BENCHMARKS.md` §5 |
 | Native Phase 1 modules + tests | done: `native/`, 3 CTest targets passing |
 | Native Phase 2 foundations + tests | done: bounded arena, layer plan, staging loader, hash backend |
@@ -30,6 +30,7 @@ This repository is a systems/inference project, not a medical product.
 | Thermal control for A/B runs | **partially mitigated** — `scripts/ab_prefetch.py` interleaves configs; device still reaches 74 °C, so spreads are reported |
 | Platforms | Reference arm64 device **tested**; Linux/macOS expected, untested; Windows needs a port — `docs/PORTABILITY.md` |
 | Redmi Turbo 3 benchmark summary | `benchmarks/REDMI_TURBO_3_BENCHMARK.md` (all gates, one page) |
+| C framework API + installable SDK | **done**: `sdk/`, `docs/FRAMEWORK.md`, `msr-cli`, installed `find_package(msr)` example ran; `BENCHMARKS.md` §12 |
 | Known limits + collaborator fixes | `LIMITATION.md` |
 | Session work log | `updates.md` |
 
@@ -67,6 +68,7 @@ BENCHMARKS.md           measured numbers + conditions
 benchmarks/REDMI_TURBO_3_BENCHMARK.md   consolidated device results
 ARCHITECTURE.md         (next)
 docs/
+  FRAMEWORK.md          C API reference, SDK build/consumption guide
   PORTABILITY.md        platform status: reference device / Linux / macOS / Windows
   streaming-design.md
   decisions/ADR-001-backend-integration.md
@@ -80,8 +82,9 @@ scripts/
   run_measured.py       VmHWM/PSS sampler wrapper
   ab_prefetch.py        interleaved A/B runner for streaming configs
   setup.sh              fresh-clone setup + build + tests
+sdk/                    installable C SDK (libmsr_engine, msr-cli, example)
 native/
-  include/msr/          public headers (storage, model, memory, streaming, backend)
+  include/msr/          public headers (storage, model, memory, streaming, backend, engine)
   src/                  implementations
   tools/model_inspect   GGUF inspector + bounded tensor reader
   tests/                GGUF malformed-file fixtures + streaming budget test

@@ -500,3 +500,36 @@ Raw data: `benchmarks/results/phase3-warm-1g/`,
 `benchmarks/results/phase3-warm-15g/` (`*.json` per run, `summary.json`).
 Consolidated device summary: `benchmarks/REDMI_TURBO_3_BENCHMARK.md`.
 
+
+---
+
+## 12. Phase 4 — C framework API (installable SDK)
+
+The engine is consumed through a C API (`native/include/msr/engine/engine.h`),
+bundled into one `libmsr_engine.so` with llama.cpp, the provider and the core.
+`docs/FRAMEWORK.md` has the full reference; this section records verification
+and one important bug found during the build.
+
+Conditions: reference device, same model/prompt/flags as §11, 1 GiB budget,
+prefetch + 4 readers, 8 generated tokens. Runner: `sdk/tools/msr_cli.cpp`.
+
+| Check | Result |
+| --- | --- |
+| Output vs stock | `thought\n1.  **Identify` — byte-identical |
+| Weight budget | 1,073,741,824 B cap; peak weight bytes 1,020,289,024; 28/34 layers streamed |
+| Whole-process peak | VmHWM 1,301.7 MiB (native CLI reference 1,255.8 MiB; difference is the SDK load path) |
+| Cancel via token callback | `MSR_ABORTED`, 3 tokens, clean return |
+| Cancel from another thread mid-decode | `MSR_ABORTED`, 1 token, clean return |
+| Installed package | `cmake --install`, `find_package(msr)`, `msr::engine` example built and ran |
+
+**Bug found and fixed:** the first SDK build left llama.cpp's default
+`load_mode = AUTO`, which maps the whole 2.49 GB GGUF during load. The same
+inference then reported VmHWM **~3.2 GiB** despite the identical arena cap.
+Setting `load_mode = NONE` and `lazy_mode = OFF` in `msr_engine_load` (matching
+the reference CLI's `--load-mode none`) brought the measured peak down to
+**1,301.7 MiB**. This is recorded as a fixed bug in `LIMITATION.md`; it is a
+reminder that the arena cap alone never establishes a memory bound.
+
+Caveats: single-run spot checks for the SDK (not a 5-run median sweep), warm
+page cache, one device. The 5-run interleaved throughput numbers remain those
+in §11 for the reference CLI path.

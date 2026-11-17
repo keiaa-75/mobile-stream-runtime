@@ -164,28 +164,37 @@ gives both stock speed and half the RAM.
   upstream `SHA256SUMS` is still open, and the streamed loader does not verify
   the file before use.
 
-## 4. Missing work, in suggested order
+## 4. Fixed during the framework build
 
-1. **Framework extraction:** move the engine lifecycle out of the reference
-   binding into `native/src/engine/` behind a C ABI (`msr_engine_*`), with the
-   CLI as a thin client. Add an installable CMake package and a minimal example.
-2. Fix B1–B3 (cancellation status, per-load flag, instance-based provider).
-3. A/B reader count (2/4/8) and slots (2/3) with the interleaved driver;
+- **Whole-file mmap in the SDK path:** llama.cpp defaults to `load_mode = AUTO`,
+  which maps the 2.49 GB GGUF and pushed measured VmHWM to ~3.2 GiB even with a
+  1 GiB arena. `msr_engine_load` now sets `load_mode = NONE` and
+  `lazy_mode = OFF`; peak dropped to 1,301.7 MiB with identical output.
+- **Cancellation status:** the C API returns `MSR_ABORTED` explicitly; both
+  callback-driven and cross-thread cancellation were verified.
+
+## 5. Missing work, in suggested order
+
+1. Fix B1–B3 (typed provider cancellation, per-load flag, instance-based
+   provider). The C API and installable SDK (`sdk/`, `docs/FRAMEWORK.md`) are
+   done; the remaining work is inside the provider/llama patch.
+2. A/B reader count (2/4/8) and slots (2/3) with the interleaved driver;
    publish medians + spread. No claims before that.
-4. Streaming `token_embd` rows (525 MiB) if lower RAM is the priority; this is
+3. Streaming `token_embd` rows (525 MiB) if lower RAM is the priority; this is
    the largest remaining memory lever, but changes Gemma-3 embedding/output
    plumbing in the vendored patch.
-5. Packed per-layer stream file (one aligned read instead of 13) if speed at
+4. Packed per-layer stream file (one aligned read instead of 13) if speed at
    the same RAM is the priority.
-6. Phase 5 text evaluation at 2K/4K/8K, sampled generation, corruption/thermal
+5. Phase 5 text evaluation at 2K/4K/8K, sampled generation, corruption/thermal
    failure tests, and honest limitations update.
-7. Multimodal (Phase 6) only after text is closed.
+6. Multimodal (Phase 6) only after text is closed.
 
-## 5. Reproduction / verification
+## 6. Reproduction / verification
 
 ```sh
 cd ~/mobile-stream-runtime
 ctest --test-dir native/build --output-on-failure        # 3 suites
+ctest --test-dir build-sdk --output-on-failure           # reference CLI
 python3 scripts/ab_prefetch.py --model ... --runs 5 \
   --out-dir benchmarks/results/<new-sweep>
 ```
@@ -198,6 +207,6 @@ git apply --check --reverse --directory=third_party/llama.cpp \
   patches/0001-msr-external-buffer-hook.patch
 ```
 
-Reference evidence: `BENCHMARKS.md` §§10–11,
+Reference evidence: `BENCHMARKS.md` §§10–12,
 `benchmarks/REDMI_TURBO_3_BENCHMARK.md`, `updates.md` §§8–9,
 `docs/PORTABILITY.md`.
