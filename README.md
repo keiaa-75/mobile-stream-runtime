@@ -30,6 +30,7 @@ This repository is a systems/inference project, not a medical product.
 | Async read queue + prefetch gate | **passed**: 1 GiB arena, 28/34 layers streamed, 2 slots, **1,255.8 MiB** peak, **3.00 tok/s** (+45.6 % vs prefetch off), byte-identical; `BENCHMARKS.md` §11 |
 | Thermal control for A/B runs | **partially mitigated** — `scripts/ab_prefetch.py` interleaves configs; device still reaches 74 °C, so spreads are reported |
 | Platforms | Android/arm64 **tested**; Linux/macOS expected, untested; Windows needs a port — `docs/PORTABILITY.md` |
+| Redmi Turbo 3 benchmark summary | `benchmarks/REDMI_TURBO_3_BENCHMARK.md` (all gates, one page) |
 | Session work log | `updates.md` |
 
 ### Headline findings
@@ -62,6 +63,7 @@ reference device uses `/storage/emulated/0/Download/gemma/`) and pass it with
 ```
 FEASIBILITY.md          Phase 0 gate document
 BENCHMARKS.md           measured numbers + conditions
+benchmarks/REDMI_TURBO_3_BENCHMARK.md   consolidated device results
 ARCHITECTURE.md         (next)
 docs/
   PORTABILITY.md        platform status: Android/Linux/macOS/Windows

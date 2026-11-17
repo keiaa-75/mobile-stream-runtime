@@ -307,7 +307,7 @@ refilled immediately before each streamed layer executes.
 
 | Field | Value |
 | --- | --- |
-| Device | `24069RA21C` (`peridot`), Android 15, 11.5 GiB RAM |
+| Device | Redmi Turbo 3 (`24069RA21C`, `peridot`), Snapdragon 8s Gen 3, Android 15, 11.0 GiB visible RAM (`MemTotal` 11,542,640 kB) |
 | Model | `medgemma-1.5-4b-it.Q4_K_M.gguf`, 2,489,894,624 B, payload 2,483,352,832 B |
 | Runtime | vendored llama.cpp `ef6bc6f`, `-t 4`, `-lm none`, `--no-repack`, `-c 2048` |
 | Prompt | `The capital of France is`, 14 prompt tokens, 7 generated, seed 42, temp 0 |
@@ -360,7 +360,8 @@ python3 scripts/ab_prefetch.py --model $M --runs 5 \
 
 Caveats carried forward:
 
-- This is the reference device (11.5 GiB). No claim for 6–8 GiB devices yet.
+- This is the reference device (Redmi Turbo 3, 11.0 GiB visible). No claim
+  for 6–8 GiB devices yet.
 - The 1 GiB budget costs ~4.2× generation throughput because ~1.5 GiB per token
   is re-read from storage. Prefetch (Phase 3) targets exactly this gap.
 - Only `gemma3` text is exercised. mmproj/vision remains Phase 6.
@@ -415,7 +416,7 @@ layer.
 
 | Field | Value |
 | --- | --- |
-| Device | `24069RA21C` (`peridot`), Android 15, 11.5 GiB RAM, 8 cores |
+| Device | Redmi Turbo 3 (`24069RA21C`, `peridot`), Snapdragon 8s Gen 3, 8 cores, Android 15, 11.0 GiB visible RAM |
 | Model | `medgemma-1.5-4b-it.Q4_K_M.gguf`, payload 2,483,352,832 B |
 | Runtime | vendored llama.cpp `ef6bc6f`, `-t 4`, `-lm none`, `--no-repack`, `-c 2048` |
 | Prompt | `The capital of France is`, 14 prompt tokens, 7 generated, seed 42, temp 0 |
@@ -497,3 +498,4 @@ Caveats carried forward:
 
 Raw data: `benchmarks/results/phase3-warm-1g/`,
 `benchmarks/results/phase3-warm-15g/` (`*.json` per run, `summary.json`).
+Consolidated device summary: `benchmarks/REDMI_TURBO_3_BENCHMARK.md`.

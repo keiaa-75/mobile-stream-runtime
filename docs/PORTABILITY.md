@@ -8,7 +8,7 @@ stands, with the concrete work each platform needs.
 
 | Platform | Status | Notes |
 | --- | --- | --- |
-| Android / arm64 (reference device) | **tested** | All numbers in `BENCHMARKS.md` come from here. |
+| Android / arm64 (Redmi Turbo 3) | **tested** | All numbers in `BENCHMARKS.md` and `benchmarks/REDMI_TURBO_3_BENCHMARK.md` come from here. |
 | Linux / x86_64 (desktop, glibc) | **expected to work, untested** | Same POSIX + `LD_PRELOAD` + ELF weak-symbol model already in use. Needs a build and a run. |
 | Linux / arm64 (non-Android, e.g. SBC) | **expected to work, untested** | Same as above; Termux on Android is already this shape. |
 | macOS | **plausible, untested** | POSIX file I/O and Mach-O weak symbols exist; build must use `DYLD_INSERT_LIBRARIES` instead of `LD_PRELOAD`, and `O_DIRECT` is absent (the code already guards it). |
