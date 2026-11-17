@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Mobility Engine</string>
+    <string name="pick_model">Pick GGUF model</string>
+    <string name="generate">Generate</string>
+    <string name="cancel">Cancel</string>
+</resources>

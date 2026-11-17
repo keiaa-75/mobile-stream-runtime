@@ -12,7 +12,7 @@ This repository is a systems/inference project, not a medical product.
 - Project context: `/storage/emulated/0/Download/gemma/mobile_storage_streamed_llm_runtime_context.md`
 - Model assets (12 GB target): `/storage/emulated/0/Download/gemma/`
 
-## Current status — Phases 1–3 complete, Phase 3 gate passed
+## Current status — Phases 1–3 complete; Phase 4 JNI tested, APK gate open
 
 | Deliverable | State |
 | --- | --- |
@@ -22,13 +22,15 @@ This repository is a systems/inference project, not a medical product.
 | `docs/streaming-design.md` | draft (hybrid residency planner) |
 | `docs/model-inventory/` | full GGUF parse for both files |
 | `MODEL_COMPATIBILITY.md` | written, Phase 1 read evidence included |
-| `BENCHMARKS.md` | storage, mmap, KV model, stock baseline, arena streaming (§10), async prefetch (§11) |
+| `BENCHMARKS.md` | storage, mmap, KV model, stock baseline, arena streaming (§10), async prefetch (§11), JNI smoke test (§12) |
 | Conventional build baseline | done: ~2.62 GiB peak RSS, ~12 tok/s at 2K; see `BENCHMARKS.md` §5 |
 | Native Phase 1 modules + tests | done: `native/`, 3 CTest targets passing |
 | Native Phase 2 foundations + tests | done: bounded arena, layer plan, staging loader, hash backend |
 | Real streamed inference gate | **passed**: 1 GiB arena, 26/34 layers streamed, 1,307 MiB peak, byte-identical output; `BENCHMARKS.md` §10 |
 | Async read queue + prefetch gate | **passed**: 1 GiB arena, 28/34 layers streamed, 2 slots, **1,255.8 MiB** peak, **3.00 tok/s** (+45.6 % vs prefetch off), byte-identical; `BENCHMARKS.md` §11 |
 | Thermal control for A/B runs | **partially mitigated** — `scripts/ab_prefetch.py` interleaves configs; device still reaches 74 °C, so spreads are reported |
+| JNI bridge (Phase 4) | **tested on device**: load/generate/cancel/stats, byte-identical output; `docs/native-api.md`, `BENCHMARKS.md` §12 |
+| Android app shell (Phase 4) | Kotlin sources + Gradle project written; **APK not built/installed** (no SDK/NDK here); `docs/device-compatibility.md` |
 | Platforms | Android/arm64 **tested**; Linux/macOS expected, untested; Windows needs a port — `docs/PORTABILITY.md` |
 | Redmi Turbo 3 benchmark summary | `benchmarks/REDMI_TURBO_3_BENCHMARK.md` (all gates, one page) |
 | Session work log | `updates.md` |
@@ -67,6 +69,8 @@ benchmarks/REDMI_TURBO_3_BENCHMARK.md   consolidated device results
 ARCHITECTURE.md         (next)
 docs/
   PORTABILITY.md        platform status: Android/Linux/macOS/Windows
+  native-api.md         C ABI + JNI surface, build instructions
+  device-compatibility.md  ABIs, storage, memory, APK gate checklist
   android-platform.md
   streaming-design.md
   decisions/ADR-001-backend-integration.md
@@ -77,6 +81,7 @@ scripts/
   io_bench.py           sequential/random throughput
   mmap_probe.py         mmap residency, whole-file vs windowed
   inventory_md.py       JSON -> Markdown
+  jni_smoke.sh          headless JNI end-to-end + cancellation test
   run_measured.py       VmHWM/PSS sampler wrapper
   ab_prefetch.py        interleaved A/B runner for streaming configs
   setup.sh              fresh-clone setup + build + tests

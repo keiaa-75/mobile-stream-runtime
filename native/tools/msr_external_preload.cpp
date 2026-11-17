@@ -32,6 +32,7 @@
 
 #include <msr/memory/memory_manager.hpp>
 #include <msr/model/gguf.hpp>
+#include <msr/msr_external_abi.h>
 #include <msr/scheduler/async_reader.hpp>
 #include <msr/storage/model_file.hpp>
 #include <msr/streaming/layer_plan.hpp>
@@ -81,6 +82,9 @@ std::unordered_map<std::string, Binding> g_bindings;
 std::unique_ptr<msr::scheduler::AsyncReader> g_reader;
 std::unique_ptr<msr::scheduler::LayerPrefetcher> g_prefetcher;
 bool g_prefetch = false;
+bool g_prefetch_set = false;
+bool g_budget_set = false;
+bool g_threads_set = false;
 std::size_t g_stream_slots = 1;
 std::size_t g_read_workers = 1;
 std::set<int> g_streamed_layers;
@@ -103,15 +107,19 @@ bool initialize() {
     if (g_initialized) return g_ready;
     g_initialized = true;
 
-    const char* model = std::getenv("MSR_MODEL_PATH");
-    if (!model) {
-        std::cerr << "msr_external: MSR_MODEL_PATH is required\n";
-        return false;
+    if (g_model_path.empty()) {
+        const char* model = std::getenv("MSR_MODEL_PATH");
+        if (!model) {
+            std::cerr << "msr_external: MSR_MODEL_PATH is required\n";
+            return false;
+        }
+        g_model_path = model;
     }
-    g_model_path = model;
 
-    if (const char* budget = std::getenv("MSR_BUDGET_BYTES")) {
-        g_budget = std::strtoull(budget, nullptr, 10);
+    if (!g_budget_set) {
+        if (const char* budget = std::getenv("MSR_BUDGET_BYTES")) {
+            g_budget = std::strtoull(budget, nullptr, 10);
+        }
     }
     if (g_budget == 0) {
         std::cerr << "msr_external: invalid MSR_BUDGET_BYTES\n";
@@ -157,13 +165,17 @@ bool initialize() {
         g_layouts.push_back(std::move(layout));
     }
 
-    if (const char* pf = std::getenv("MSR_PREFETCH")) {
-        g_prefetch = std::strtol(pf, nullptr, 10) != 0;
+    if (!g_prefetch_set) {
+        if (const char* pf = std::getenv("MSR_PREFETCH")) {
+            g_prefetch = std::strtol(pf, nullptr, 10) != 0;
+        }
     }
     g_stream_slots = g_prefetch ? 2 : 1;
-    if (const char* workers = std::getenv("MSR_READ_THREADS")) {
-        const long v = std::strtol(workers, nullptr, 10);
-        if (v > 0 && v <= 16) g_read_workers = static_cast<std::size_t>(v);
+    if (!g_threads_set) {
+        if (const char* workers = std::getenv("MSR_READ_THREADS")) {
+            const long v = std::strtol(workers, nullptr, 10);
+            if (v > 0 && v <= 16) g_read_workers = static_cast<std::size_t>(v);
+        }
     }
 
     // Keep the first units resident; stream transformer layers from the end
@@ -314,6 +326,55 @@ bool begin_stream_layer_locked(int layer) {
 }
 
 }  // namespace
+
+extern "C" void msr_external_configure(const char* model_path,
+                                        unsigned long long budget_bytes,
+                                        int prefetch, int read_threads) {
+    std::lock_guard<std::mutex> lock(g_mutex);
+    if (g_initialized) return;  // first session wins
+    if (model_path && *model_path) {
+        g_model_path = model_path;
+    }
+    if (budget_bytes != 0) {
+        g_budget = static_cast<std::uint64_t>(budget_bytes);
+        g_budget_set = true;
+    }
+    if (prefetch >= 0) {
+        g_prefetch = prefetch != 0;
+        g_prefetch_set = true;
+    }
+    if (read_threads > 0) {
+        const std::size_t n = static_cast<std::size_t>(read_threads);
+        g_read_workers = n > 16 ? 16 : n;
+        g_threads_set = true;
+    }
+}
+
+extern "C" void msr_external_get_stats(msr_external_stats* out) {
+    if (!out) return;
+    std::lock_guard<std::mutex> lock(g_mutex);
+    std::memset(out, 0, sizeof(*out));
+    if (!g_ready) return;
+
+    out->budget_bytes = g_budget;
+    out->resident_weight_bytes = g_resident_bytes;
+    out->stream_buffer_bytes = g_stream_bytes;
+    out->peak_weight_bytes = g_peak_weight_bytes;
+    out->streamed_layers = static_cast<int>(g_streamed_layers.size());
+    out->stream_slots = static_cast<int>(g_stream_slots);
+    out->prefetch = g_prefetch ? 1 : 0;
+    out->read_threads = static_cast<int>(g_read_workers);
+    if (g_reader) {
+        const auto st = g_reader->stats();
+        out->read_bytes = st.bytes_read;
+        out->read_io_ns = st.io_ns;
+        out->read_wait_ns = st.wait_ns;
+        out->reads_submitted = st.submitted;
+        out->reads_completed = st.completed;
+        out->reads_failed = st.failed;
+        out->reads_dropped = st.dropped;
+    }
+}
 
 extern "C" void msr_external_summary() {
     if (!g_ready) return;

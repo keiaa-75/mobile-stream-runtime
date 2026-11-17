@@ -646,3 +646,46 @@ replacement (2–4 day estimate).
 Phase 4 — JNI + Kotlin shell over the streaming provider, including wiring
 `msr_streaming_cancel()` to UI/user cancellation. Phase 5 (thermal-aware A/B) is
 still open; the interleaved sweeps reduce but do not remove thermal noise.
+
+## 10. Phase 4 in progress — JNI bridge tested, app shell written (2026-11-17, same day)
+
+### What changed
+
+- Stable provider C ABI: `native/include/msr/msr_external_abi.h`
+  (`msr_external_configure`, `msr_external_get_stats`). The LD_PRELOAD path is
+  unchanged; env vars remain the fallback.
+- JNI bridge: `native/jni/msr_jni.cpp` + `native/jni/CMakeLists.txt`. The
+  provider, `msr_core` and static llama.cpp are linked **into** one
+  `libmsr_jni.so`, so the weak hooks resolve without `LD_PRELOAD` (unavailable
+  in an app). API: `create/load/generate/cancel/destroy/stats/lastError`.
+  llama's CPU abort callback plus `msr_streaming_cancel()` implement
+  cancellation; token sink can also stop generation by returning false.
+- Java mirror (`native/jni/java/dev/msr/engine/`) and headless CLI
+  (`scripts/jni_smoke.sh`) test the **exact** JNI symbols the Kotlin app uses.
+- Android shell sources in `android/`: Kotlin `MsrEngine`/`StreamingService`/
+  `MainActivity`, manifest (SAF + foreground service), layout, Gradle files.
+  Framework-only UI (no AndroidX).
+- Docs: `docs/native-api.md`, `docs/device-compatibility.md`,
+  `android/README.md`. `BENCHMARKS.md` §12 records the smoke test.
+
+### Measured on the device
+
+JNI CLI, 1 GiB budget, prefetch + 4 readers, 8 tokens, `-Xmx256m`:
+
+- Output identical to stock; `stats()` reports 1,020,289,024 B peak weight
+  bytes (inside budget), 28/34 layers streamed, TTFT ~0.7–1.4 s.
+- Cancellation works both via the token sink (stopped after 3 tokens) and from
+  another thread mid-decode (stopped after 1 token). A first thread-cancel run
+  surfaced a native exception when `llama_decode` returned the abort status;
+  fixed by treating `abort_now()` as graceful termination.
+- External sampler: JVM process VmHWM 3,312.0 MiB / PSS 2,605.3 MiB — JVM
+  reservations dominate; not comparable to the native CLI peaks.
+
+### Gate status and limits
+
+**Phase 4 exit gate is NOT passed.** Only the JNI half is verified. The Kotlin
+sources are unbuilt (no SDK/NDK/Gradle here), so no debug APK, no install, no
+UI end-to-end run, and no UI-level cancellation/stats display. Also unresolved
+for the NDK build: `integrity.cpp`'s OpenSSL dependency (NDK has no OpenSSL),
+16 KB-page ELF flags, and the final SAF copy verification. See
+`docs/device-compatibility.md` for the concrete path to the APK gate.

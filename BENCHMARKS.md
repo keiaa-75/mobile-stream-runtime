@@ -499,3 +499,29 @@ Caveats carried forward:
 Raw data: `benchmarks/results/phase3-warm-1g/`,
 `benchmarks/results/phase3-warm-15g/` (`*.json` per run, `summary.json`).
 Consolidated device summary: `benchmarks/REDMI_TURBO_3_BENCHMARK.md`.
+
+---
+
+## 12. Phase 4 — JNI bridge smoke test (headless, not the app)
+
+The JNI bridge (`native/jni/msr_jni.cpp`) was built and exercised on the
+reference device through the Java mirror of the Kotlin API. This checks the same
+native surface the app calls; it is **not** an app-UI measurement.
+
+Conditions: same model and greedy prompt as §11, 1 GiB budget, prefetch on,
+4 read threads, `-Xmx256m` JVM, 8 generated tokens. Full script:
+`scripts/jni_smoke.sh`. Raw external sample: `benchmarks/results/phase4-jni-cli.json`.
+
+| Check | Result |
+| --- | --- |
+| Output vs stock | `thought\n1.  **Identify` — byte-identical |
+| `load` / `stats` | peak weight bytes 1,020,289,024 (≤ budget), 28/34 layers streamed, 2 slots |
+| Greedy generation | 14 prompt tokens, 8 generated, TTFT ~0.7–1.4 s, ~2.7–3.0 s generation |
+| Cancel via token sink (return false) | stopped after 3 tokens, no exception |
+| Cancel from another thread mid-decode | stopped after 1 token, no exception (after the abort-callback fix) |
+| Whole-process peak (external sampler) | VmHWM **3,312.0 MiB**, PSS 2,605.3 MiB — JVM process, not comparable with the native CLI rows |
+
+The JVM's own reservations dominate that VmHWM (it is not the arena); the
+provider's reported peak weight bytes remain inside the 1 GiB cap. No
+app-UI/gate claim: the APK has not been built or installed. Platform status and
+remaining SDK work: `docs/device-compatibility.md`.
