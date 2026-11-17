@@ -53,7 +53,7 @@ cmake --build build-static --target llama -j4
 cmake -S sdk -B build-sdk -G Ninja -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_PREFIX=$PWD/build-sdk/prefix
 cmake --build build-sdk -j4
-ctest --test-dir build-sdk --output-on-failure
+ctest --test-dir build-sdk --output-on-failure   # model-dependent, skipped if asset absent
 cmake --install build-sdk
 ```
 

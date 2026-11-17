@@ -44,7 +44,11 @@ target_link_libraries(test-scheduler PRIVATE msr_core)
 enable_testing()
 add_test(NAME gguf_fixtures
          COMMAND test-gguf ${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures)
-add_test(NAME streaming_budget
-         COMMAND test-streaming
-                 /storage/emulated/0/Download/gemma/medgemma-1.5-4b-it.Q4_K_M.gguf)
+# The model-file test is only registered when the reference asset is present
+# (CI machines do not have it); the other suites are model-independent.
+if(EXISTS "/storage/emulated/0/Download/gemma/medgemma-1.5-4b-it.Q4_K_M.gguf")
+  add_test(NAME streaming_budget
+           COMMAND test-streaming
+                   /storage/emulated/0/Download/gemma/medgemma-1.5-4b-it.Q4_K_M.gguf)
+endif()
 add_test(NAME scheduler_async COMMAND test-scheduler)

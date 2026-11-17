@@ -63,10 +63,13 @@ target_link_libraries(msr-cli PRIVATE msr_engine)
 set_target_properties(msr-cli PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
 enable_testing()
-add_test(NAME framework_cli
-         COMMAND msr-cli
-                 /storage/emulated/0/Download/gemma/medgemma-1.5-4b-it.Q4_K_M.gguf
-                 "The capital of France is" 8 1024 4 4 1)
+# Needs the reference model; skip on build hosts that do not have it.
+if(EXISTS "/storage/emulated/0/Download/gemma/medgemma-1.5-4b-it.Q4_K_M.gguf")
+  add_test(NAME framework_cli
+           COMMAND msr-cli
+                   /storage/emulated/0/Download/gemma/medgemma-1.5-4b-it.Q4_K_M.gguf
+                   "The capital of France is" 8 1024 4 4 1)
+endif()
 
 install(TARGETS msr_engine EXPORT msrTargets
         LIBRARY DESTINATION lib

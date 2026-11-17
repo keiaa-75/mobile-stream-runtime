@@ -21,3 +21,6 @@ __pycache__/
 # Build trees (regenerate via docs/FRAMEWORK.md)
 /build-static/
 /build-sdk/
+
+# Distribution packages
+/dist/

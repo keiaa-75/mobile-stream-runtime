@@ -69,7 +69,8 @@ cd Mobility_Engine
 scripts/setup.sh          # submodule, MSR hook patch, builds, CTest
 ```
 
-Model weights are not committed: place the GGUF wherever you like (the
+Ready-to-run x86_64 packages are built by CI on release tags; see
+`docs/PACKAGING.md`. Model weights are not committed: place the GGUF wherever you like (the
 reference device uses `/storage/emulated/0/Download/gemma/`) and pass it with
 `-m` / `MSR_MODEL_PATH`. Run commands are in `BENCHMARKS.md` §11.
 
@@ -85,6 +86,7 @@ docs/
   FRAMEWORK.md          C API reference, SDK build/consumption guide
   setup-fedora.md       Fedora x86_64 setup guide
   setup-lubuntu.md      Lubuntu x86_64 setup guide
+  PACKAGING.md          ready-to-run release packages, download + verify
   PORTABILITY.md        platform status: reference device / Linux / macOS / Windows
   streaming-design.md
   decisions/ADR-001-backend-integration.md
