@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # End-to-end JNI smoke test on the device (headless CLI). This exercises the
-# exact native surface the Android app calls: load, greedy generate, per-token
+# JNI binding surface of the framework: load, greedy generate, per-token
 # sink, stats, and both cancellation paths.
 set -euo pipefail
 

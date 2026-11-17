@@ -21,11 +21,5 @@ __pycache__/
 # JNI build products
 /native/jni/classes/
 
-# Android build products
-/android/.gradle/
-/android/app/build/
-/android/local.properties
-*.apk
-
 # Static dependency build (regenerate via docs/native-api.md)
 /build-static/

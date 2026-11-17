@@ -502,11 +502,11 @@ Consolidated device summary: `benchmarks/REDMI_TURBO_3_BENCHMARK.md`.
 
 ---
 
-## 12. Phase 4 — JNI bridge smoke test (headless, not the app)
+## 12. Phase 4 — JNI binding smoke test (headless framework check)
 
-The JNI bridge (`native/jni/msr_jni.cpp`) was built and exercised on the
-reference device through the Java mirror of the Kotlin API. This checks the same
-native surface the app calls; it is **not** an app-UI measurement.
+The optional JNI binding (`native/jni/msr_jni.cpp`) was built and exercised on
+the reference device through its Java mirror. It checks the binding surface of
+the framework; there is no app/UI in scope (app development was cancelled).
 
 Conditions: same model and greedy prompt as §11, 1 GiB budget, prefetch on,
 4 read threads, `-Xmx256m` JVM, 8 generated tokens. Full script:
@@ -523,5 +523,5 @@ Conditions: same model and greedy prompt as §11, 1 GiB budget, prefetch on,
 
 The JVM's own reservations dominate that VmHWM (it is not the arena); the
 provider's reported peak weight bytes remain inside the 1 GiB cap. No
-app-UI/gate claim: the APK has not been built or installed. Platform status and
-remaining SDK work: `docs/device-compatibility.md`.
+No app/APK claim is made. Framework limits and collaborator hand-off:
+`LIMITATION.md`; platform status: `docs/PORTABILITY.md`.

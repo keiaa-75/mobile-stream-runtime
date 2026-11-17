@@ -4,7 +4,8 @@ Two layers, deliberately separated:
 
 1. **Provider C ABI** (`native/include/msr/msr_external_abi.h`) — configuration
    and telemetry for the streaming engine.
-2. **JNI surface** (`native/jni/msr_jni.cpp`) — the only API an app calls. No
+2. **JNI surface** (`native/jni/msr_jni.cpp`) — an optional JVM binding. It is
+   not the framework's primary API (a C engine API is the next step). No
    llama.cpp, ggml or provider type crosses it.
 
 ## Provider C ABI
@@ -33,8 +34,7 @@ void msr_external_get_stats(msr_external_stats *out);
 ## JNI surface
 
 Class `dev.msr.engine.MsrEngine` (Java mirror in
-`native/jni/java/dev/msr/engine/MsrEngine.java`, Kotlin source in
-`android/app/src/main/java/dev/msr/engine/MsrEngine.kt`).
+`native/jni/java/dev/msr/engine/MsrEngine.java`).
 
 | Method | Meaning |
 | --- | --- |
@@ -51,8 +51,8 @@ Threading and lifecycle rules:
 - One engine instance = one model + one context. `load` is single-shot. `close`
   destroys the model and KV cache.
 - `generate` serialises per engine (internal mutex). The caller should run it on
-  a background thread; the Android shell uses a single-thread `ExecutorService`
-  inside a foreground service.
+  a background thread; the JNI binding is safe only for one engine per process
+  (see `LIMITATION.md`, B3/B6).
 - Cancellation granularity is one token (or one 512-token prompt chunk). The
   abort callback also interrupts a CPU `llama_decode` in progress.
 - Errors are Java `IllegalStateException`; native code never throws across JNI.
@@ -76,7 +76,7 @@ cmake -S native/jni -B native/build/jni-cmake -G Ninja
 cmake --build native/build/jni-cmake -j4
 # -> native/build/jni/libmsr_jni.so
 
-# 3. Java smoke CLI (same JNI symbols the Kotlin app uses)
+# 3. Java smoke CLI (headless check of the binding)
 mkdir -p native/jni/classes
 javac -d native/jni/classes native/jni/java/dev/msr/engine/*.java
 java -Djava.library.path=native/build/jni -cp native/jni/classes \
@@ -92,6 +92,6 @@ cancellation paths.
 - The Java CLI path is run end-to-end on the reference device (see
   `BENCHMARKS.md` §12): load, greedy generation, per-token sink, stats, and both
   cancellation paths.
-- The Kotlin app sources in `android/` are **source-complete but not compiled
-  or installed**: this environment has no Android SDK/NDK/Gradle. The APK exit
-  gate remains open. See `docs/device-compatibility.md`.
+- Android application development was **cancelled**; no APK or UI is part of
+  this project. The JNI library is kept as an optional framework binding.
+  Known limitations and collaborator fixes are in `LIMITATION.md`.

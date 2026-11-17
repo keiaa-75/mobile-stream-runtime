@@ -643,11 +643,12 @@ replacement (2–4 day estimate).
 
 ### Next step (not started)
 
-Phase 4 — JNI + Kotlin shell over the streaming provider, including wiring
-`msr_streaming_cancel()` to UI/user cancellation. Phase 5 (thermal-aware A/B) is
-still open; the interleaved sweeps reduce but do not remove thermal noise.
+Extract the engine lifecycle into a C framework API (`msr_engine_*`) with JNI
+as a thin binding, then fix the high-priority items in `LIMITATION.md`.
+Phase 5 (thermal-aware A/B) is still open; the interleaved sweeps reduce but do
+not remove thermal noise.
 
-## 10. Phase 4 in progress — JNI bridge tested, app shell written (2026-11-17, same day)
+## 10. Phase 4 redirected — JNI binding tested, app development cancelled (2026-11-17)
 
 ### What changed
 
@@ -661,12 +662,12 @@ still open; the interleaved sweeps reduce but do not remove thermal noise.
   llama's CPU abort callback plus `msr_streaming_cancel()` implement
   cancellation; token sink can also stop generation by returning false.
 - Java mirror (`native/jni/java/dev/msr/engine/`) and headless CLI
-  (`scripts/jni_smoke.sh`) test the **exact** JNI symbols the Kotlin app uses.
-- Android shell sources in `android/`: Kotlin `MsrEngine`/`StreamingService`/
-  `MainActivity`, manifest (SAF + foreground service), layout, Gradle files.
-  Framework-only UI (no AndroidX).
-- Docs: `docs/native-api.md`, `docs/device-compatibility.md`,
-  `android/README.md`. `BENCHMARKS.md` §12 records the smoke test.
+  (`scripts/jni_smoke.sh`) test the **exact** JNI symbols the framework binding exposes.
+- Android app development was **cancelled**. The Kotlin/Gradle shell that was
+  drafted has been removed from the repository; no APK, UI or app gate exists.
+  The JNI code stays only as an optional binding to the framework.
+- Docs: `docs/native-api.md`; `BENCHMARKS.md` §12 records the binding smoke
+  test; `LIMITATION.md` collects every limit and known bug for collaborators.
 
 ### Measured on the device
 
@@ -681,11 +682,12 @@ JNI CLI, 1 GiB budget, prefetch + 4 readers, 8 tokens, `-Xmx256m`:
 - External sampler: JVM process VmHWM 3,312.0 MiB / PSS 2,605.3 MiB — JVM
   reservations dominate; not comparable to the native CLI peaks.
 
-### Gate status and limits
+### Scope decision and limits
 
-**Phase 4 exit gate is NOT passed.** Only the JNI half is verified. The Kotlin
-sources are unbuilt (no SDK/NDK/Gradle here), so no debug APK, no install, no
-UI end-to-end run, and no UI-level cancellation/stats display. Also unresolved
-for the NDK build: `integrity.cpp`'s OpenSSL dependency (NDK has no OpenSSL),
-16 KB-page ELF flags, and the final SAF copy verification. See
-`docs/device-compatibility.md` for the concrete path to the APK gate.
+The app exit gate is **closed as out of scope**, not "passed" — no APK was ever
+built or installed and all app sources were removed. The verified deliverable is
+the framework plus its optional JNI binding. `LIMITATION.md` records 15 concrete
+bugs/sharp edges (cancellation status, env-driven `MSR_NO_ALLOC`, global
+singleton provider, node-name refills, dangling layout pointer, slot-safety
+assumptions, misleading I/O counters, thermal/cold-cache limits) and the
+suggested fix order. No support claim beyond the measured reference device.

@@ -74,7 +74,8 @@ margin, minus the KV cache, minus activations.
 ## 6. Power and thermals
 
 - Continuous storage reads plus CPU inference will heat the device. Thermal
-  status is readable via `PowerManager.getCurrentThermalStatus()` from Kotlin.
+  status is readable via the OS thermal APIs; the JNI stats surface returns
+  `-1` when the process cannot read thermal zones.
 - Battery delta per 1K tokens is a required benchmark metric, not an
   afterthought.
 - Charging while benchmarking changes thermal behaviour; record it.
