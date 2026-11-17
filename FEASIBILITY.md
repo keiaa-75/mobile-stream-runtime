@@ -3,7 +3,7 @@
 **Phase 0 gate document.** Answers one question: *is there a technically
 credible way to execute at least one model with bounded weight buffers?*
 
-Date: 2026-11-16 · Device: `24069RA21C` (`peridot`), Android 15, 11.5 GB RAM
+Date: 2026-11-16 · Device: `24069RA21C` (`peridot`), OS 15, 11.5 GB RAM
 · Upstream under review: `ggml-org/llama.cpp@ef6bc6f`
 
 ---
@@ -202,7 +202,7 @@ a conventional loader with a hard budget check instead of a streaming engine.
    copying? (Test: one layer, compare output to stock.)
 2. `O_DIRECT` read granularity vs 32 B GGUF alignment — confirm over-read
    cost is negligible at 4 KiB rounding.
-3. What does Android's LMK do to a 2.3 GiB-RSS process under a 300 MiB
+3. What does the OS low-memory killer do to a 2.3 GiB-RSS process under a 300 MiB
    foreground app? (Test under load, not idle.)
 4. Thermal decay curve during a 30-minute generation.
 5. Actual compute time per layer on 8 cores — the ceiling table ignores it.

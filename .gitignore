@@ -18,8 +18,5 @@ __pycache__/
 *.log
 .DS_Store
 
-# JNI build products
-/native/jni/classes/
-
 # Static dependency build (regenerate via docs/native-api.md)
 /build-static/

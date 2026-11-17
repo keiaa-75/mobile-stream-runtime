@@ -473,7 +473,7 @@ extern "C" void msr_streaming_node_start(void* node, const char* name) {
 }
 
 /// Drops queued prefetch work and marks the streamed layer state stale.
-/// Exported for the Phase 4 JNI layer; nothing calls it during a normal run.
+/// Exported for host bindings that implement cancellation; no in-runtime caller.
 extern "C" void msr_streaming_cancel() {
     if (!g_ready) return;
     std::lock_guard<std::mutex> lock(g_mutex);

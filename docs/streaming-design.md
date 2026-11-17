@@ -103,16 +103,16 @@ Reported separately, every run:
 A claim of "bounded memory" is only valid against the **process peak**, not
 against the arena alone.
 
-## 7. Android mapping
+## 7. Host mapping
 
-- Runtime lives in a foreground service; the model file is app-private
-  (`filesDir`) by default.
-- JNI surface: `open(model, config)`, `generate(prompt, params)`,
-  `cancel()`, `stats()`, `close()`.
-- `stats()` returns the table in §6 as a struct, so the UI and the benchmark
-  harness read the same numbers.
-- On `onTrimMemory(TRIM_MEMORY_RUNNING_LOW)`, drop the layer cache before
-  anything else.
+- Runtime lives in a long-lived host process; the model file is provided by the
+  host (absolute path) and never copied into the repository.
+- Planned framework API: `msr_engine_create`, `load`, `generate`, `cancel`,
+  `stats`, `destroy` (C ABI in `native/src/engine/`). No backend types cross it.
+- `stats()` returns the table in §6 as a struct, so benchmarks and hosts read
+  the same numbers.
+- On a low-memory signal from the host OS, drop streamed slots before anything
+  else; never evict a pinned buffer.
 
 ## 8. Open design questions
 

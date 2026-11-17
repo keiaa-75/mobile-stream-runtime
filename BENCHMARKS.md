@@ -9,7 +9,7 @@ Reproduce with the scripts in `scripts/`. Raw output is in
 | Field | Value |
 | --- | --- |
 | Device | 24069RA21C (`peridot`), aarch64, 8 cores |
-| Android | 15 (SDK 35), kernel 6.1.118-android14 |
+| OS | 15 (SDK 35), kernel 6.1.118 |
 | RAM | 11,542,640 kB total; MemAvailable 4,572,176 kB at test time |
 | Swap | 8,388,604 kB (`zram`-backed) |
 | Storage | `/storage/emulated/0` (FUSE), 227 GB, 23 GB free |
@@ -307,7 +307,7 @@ refilled immediately before each streamed layer executes.
 
 | Field | Value |
 | --- | --- |
-| Device | Redmi Turbo 3 (`24069RA21C`, `peridot`), Snapdragon 8s Gen 3, Android 15, 11.0 GiB visible RAM (`MemTotal` 11,542,640 kB) |
+| Device | Redmi Turbo 3 (`24069RA21C`, `peridot`), Snapdragon 8s Gen 3, OS 15, 11.0 GiB visible RAM (`MemTotal` 11,542,640 kB) |
 | Model | `medgemma-1.5-4b-it.Q4_K_M.gguf`, 2,489,894,624 B, payload 2,483,352,832 B |
 | Runtime | vendored llama.cpp `ef6bc6f`, `-t 4`, `-lm none`, `--no-repack`, `-c 2048` |
 | Prompt | `The capital of France is`, 14 prompt tokens, 7 generated, seed 42, temp 0 |
@@ -383,7 +383,7 @@ New module (`native/include/msr/scheduler/async_reader.hpp`,
 | `AsyncReader` | Bounded queue of positional reads (`queue_depth`, default 32) served by 1–16 worker threads. `submit()` blocks when the queue is full, so nothing grows without limit. `wait(tag)`, `drain()`, `cancel_pending()` (queued → `Cancelled`, in-flight finishes), plus counters for bytes, I/O time, compute-thread wait time, submit blocking and peak queue depth. |
 | `LayerPrefetcher` | Groups ranges per layer (a layer is 13 separate GGUF tensors, not one extent), supports a synchronous first layer, `wait_layer`, `cancel_pending`, `reset`. Owns no buffers. |
 
-Android's FUSE storage exposes no usable `io_uring`/AIO here, so the portable
+The reference device's FUSE storage exposes no usable `io_uring`/AIO here, so the portable
 fallback is a thread pool issuing `pread`; the interface does not assume
 completion order, so a kernel backend can replace the workers later.
 
@@ -399,7 +399,7 @@ Provider wiring (`native/tools/msr_external_preload.cpp`):
   graph construction, overlapping it with graph build and the resident layers.
 - `MSR_READ_THREADS=N` (default 1) sets the worker count; page-cache reads are
   `memcpy`-bound and parallelise across cores.
-- `msr_streaming_cancel()` is exported for the Phase 4 JNI layer. No in-runtime
+- `msr_streaming_cancel()` is exported for cancellable hosts. No in-runtime
   caller yet.
 - Cost: one extra 60.6 MB slot. The planner streams 1–2 more layers so peak
   weight memory stays under budget (at 1 GiB: 1,020,289,024 B of 1,073,741,824 B).
@@ -416,7 +416,7 @@ layer.
 
 | Field | Value |
 | --- | --- |
-| Device | Redmi Turbo 3 (`24069RA21C`, `peridot`), Snapdragon 8s Gen 3, 8 cores, Android 15, 11.0 GiB visible RAM |
+| Device | Redmi Turbo 3 (`24069RA21C`, `peridot`), Snapdragon 8s Gen 3, 8 cores, OS 15, 11.0 GiB visible RAM |
 | Model | `medgemma-1.5-4b-it.Q4_K_M.gguf`, payload 2,483,352,832 B |
 | Runtime | vendored llama.cpp `ef6bc6f`, `-t 4`, `-lm none`, `--no-repack`, `-c 2048` |
 | Prompt | `The capital of France is`, 14 prompt tokens, 7 generated, seed 42, temp 0 |
@@ -493,35 +493,10 @@ Caveats carried forward:
   with one slot, ~720 MiB with two. 512 MiB is infeasible for this model; no
   lower-RAM device has been tested.
 - Cancellation is implemented and unit-tested but not yet called from the
-  runtime; the JNI layer (Phase 4) is the intended caller.
+  runtime; a host binding is the intended caller.
 - Only `gemma3` text is exercised. mmproj/vision remains Phase 6.
 
 Raw data: `benchmarks/results/phase3-warm-1g/`,
 `benchmarks/results/phase3-warm-15g/` (`*.json` per run, `summary.json`).
 Consolidated device summary: `benchmarks/REDMI_TURBO_3_BENCHMARK.md`.
 
----
-
-## 12. Phase 4 — JNI binding smoke test (headless framework check)
-
-The optional JNI binding (`native/jni/msr_jni.cpp`) was built and exercised on
-the reference device through its Java mirror. It checks the binding surface of
-the framework; there is no app/UI in scope (app development was cancelled).
-
-Conditions: same model and greedy prompt as §11, 1 GiB budget, prefetch on,
-4 read threads, `-Xmx256m` JVM, 8 generated tokens. Full script:
-`scripts/jni_smoke.sh`. Raw external sample: `benchmarks/results/phase4-jni-cli.json`.
-
-| Check | Result |
-| --- | --- |
-| Output vs stock | `thought\n1.  **Identify` — byte-identical |
-| `load` / `stats` | peak weight bytes 1,020,289,024 (≤ budget), 28/34 layers streamed, 2 slots |
-| Greedy generation | 14 prompt tokens, 8 generated, TTFT ~0.7–1.4 s, ~2.7–3.0 s generation |
-| Cancel via token sink (return false) | stopped after 3 tokens, no exception |
-| Cancel from another thread mid-decode | stopped after 1 token, no exception (after the abort-callback fix) |
-| Whole-process peak (external sampler) | VmHWM **3,312.0 MiB**, PSS 2,605.3 MiB — JVM process, not comparable with the native CLI rows |
-
-The JVM's own reservations dominate that VmHWM (it is not the arena); the
-provider's reported peak weight bytes remain inside the 1 GiB cap. No
-No app/APK claim is made. Framework limits and collaborator hand-off:
-`LIMITATION.md`; platform status: `docs/PORTABILITY.md`.

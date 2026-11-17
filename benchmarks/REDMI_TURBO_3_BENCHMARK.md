@@ -12,7 +12,7 @@ and §11 (Phase 3).
 | Model / codename | `24069RA21C` / `peridot` |
 | SoC | Qualcomm Snapdragon 8s Gen 3 (`SM8635`), 8 cores |
 | RAM | 12 GB class — `MemTotal` 11,542,640 kB (11.0 GiB visible to Linux) |
-| OS | Android 15 (HyperOS) |
+| OS | 15 (HyperOS) |
 | Storage | Emulated/FUSE `/storage/emulated/0`, measured ~1.4 GiB/s sequential |
 | Thermals | Reaches ~74 °C under sustained load; throttles visibly |
 

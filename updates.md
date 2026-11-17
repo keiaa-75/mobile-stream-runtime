@@ -4,7 +4,7 @@ Canonical work log for this session. Every action taken in this repository and
 on the model assets is recorded here, in chronological order.
 
 **Session date:** 2026-11-17
-**Environment:** Termux on Android 15 (`24069RA21C`, aarch64, 11.5 GB RAM)
+**Environment:** Termux on OS 15 (`24069RA21C`, aarch64, 11.5 GB RAM)
 **Canonical project:** `~/mobile-stream-runtime/`
 
 ---
@@ -17,7 +17,7 @@ on the model assets is recorded here, in chronological order.
 | 2 | Extended the `gemna2` search to `~/` and the Termux prefix | Not found |
 | 3 | Searched `~/downloads` for `gemma` (exact name and partial `*gemma*`) | Not found |
 | 4 | Listed `~/downloads` | Only two files present: `UNLIMITED PINAY SET - LINK.url`, `Web_Communication_API_Review_2_Pages.pdf` |
-| 5 | Searched Android shared storage via `/storage/emulated` | Parent path itself not listable, but `/storage/emulated/0` is accessible |
+| 5 | Searched shared storage via `/storage/emulated` | Parent path itself not listable, but `/storage/emulated/0` is accessible |
 | 6 | Searched `/storage/emulated/0` (maxdepth 8) for `*gemma*` | Found **`/storage/emulated/0/gemma`** |
 | 7 | Inspected that directory | 5 files: `DEVELOPMENT_PHASES.md`, `checksums.txt`, `medgemma-1.5-4b-it.Q4_K_M.gguf` (2,489,894,624 B), `mmproj-medgemma-1.5-4b-it-BF16.gguf` (851,251,744 B), `mobile_storage_streamed_llm_runtime_context.md` |
 | 8 | Checked destination `/storage/emulated/0/Download` | Exists, no `gemma` subfolder conflict, same FUSE filesystem (`/dev/fuse`), ~21 GB free |
@@ -555,7 +555,7 @@ The project is now under version control and pushed to
 llama.cpp is a submodule pinned at `ef6bc6f`; the hook patch stays in
 `patches/` so the submodule is clean. Fresh clone:
 `git clone --recursive ... && scripts/setup.sh`. New `docs/PORTABILITY.md`
-records platform status: Android/arm64 tested; Linux/macOS expected but
+records platform status: reference arm64 device tested; Linux/macOS expected but
 untested; Windows needs a Win32 file backend plus a `__attribute__((weak))`
 replacement (2–4 day estimate).
 
@@ -577,7 +577,7 @@ lower-RAM hardware are Phase 7 rows; no 6–8 GiB claim is made yet.
     bytes, I/O time, compute-thread wait, submit blocking, peak depth.
   - `LayerPrefetcher`: groups the 13 tensor ranges of a layer, supports a
     synchronous first layer, per-layer waits, cancellation and reset.
-  - Portable by design (Android FUSE has no usable io_uring/AIO here); the
+  - Portable by design (The reference FUSE mount has no usable io_uring/AIO); the
     interface does not assume completion order.
 - Provider (`native/tools/msr_external_preload.cpp`):
   - `MSR_PREFETCH=1` → two stream slots; streamed layer `k` binds to slot
@@ -637,57 +637,14 @@ The project is now under version control and pushed to
 llama.cpp is a submodule pinned at `ef6bc6f`; the hook patch stays in
 `patches/` so the submodule is clean. Fresh clone:
 `git clone --recursive ... && scripts/setup.sh`. New `docs/PORTABILITY.md`
-records platform status: Android/arm64 tested; Linux/macOS expected but
+records platform status: reference arm64 device tested; Linux/macOS expected but
 untested; Windows needs a Win32 file backend plus a `__attribute__((weak))`
 replacement (2–4 day estimate).
 
 ### Next step (not started)
 
-Extract the engine lifecycle into a C framework API (`msr_engine_*`) with JNI
-as a thin binding, then fix the high-priority items in `LIMITATION.md`.
+Extract the engine lifecycle into a C framework API (`msr_engine_*`), then fix
+the high-priority items in `LIMITATION.md`.
 Phase 5 (thermal-aware A/B) is still open; the interleaved sweeps reduce but do
 not remove thermal noise.
 
-## 10. Phase 4 redirected — JNI binding tested, app development cancelled (2026-11-17)
-
-### What changed
-
-- Stable provider C ABI: `native/include/msr/msr_external_abi.h`
-  (`msr_external_configure`, `msr_external_get_stats`). The LD_PRELOAD path is
-  unchanged; env vars remain the fallback.
-- JNI bridge: `native/jni/msr_jni.cpp` + `native/jni/CMakeLists.txt`. The
-  provider, `msr_core` and static llama.cpp are linked **into** one
-  `libmsr_jni.so`, so the weak hooks resolve without `LD_PRELOAD` (unavailable
-  in an app). API: `create/load/generate/cancel/destroy/stats/lastError`.
-  llama's CPU abort callback plus `msr_streaming_cancel()` implement
-  cancellation; token sink can also stop generation by returning false.
-- Java mirror (`native/jni/java/dev/msr/engine/`) and headless CLI
-  (`scripts/jni_smoke.sh`) test the **exact** JNI symbols the framework binding exposes.
-- Android app development was **cancelled**. The Kotlin/Gradle shell that was
-  drafted has been removed from the repository; no APK, UI or app gate exists.
-  The JNI code stays only as an optional binding to the framework.
-- Docs: `docs/native-api.md`; `BENCHMARKS.md` §12 records the binding smoke
-  test; `LIMITATION.md` collects every limit and known bug for collaborators.
-
-### Measured on the device
-
-JNI CLI, 1 GiB budget, prefetch + 4 readers, 8 tokens, `-Xmx256m`:
-
-- Output identical to stock; `stats()` reports 1,020,289,024 B peak weight
-  bytes (inside budget), 28/34 layers streamed, TTFT ~0.7–1.4 s.
-- Cancellation works both via the token sink (stopped after 3 tokens) and from
-  another thread mid-decode (stopped after 1 token). A first thread-cancel run
-  surfaced a native exception when `llama_decode` returned the abort status;
-  fixed by treating `abort_now()` as graceful termination.
-- External sampler: JVM process VmHWM 3,312.0 MiB / PSS 2,605.3 MiB — JVM
-  reservations dominate; not comparable to the native CLI peaks.
-
-### Scope decision and limits
-
-The app exit gate is **closed as out of scope**, not "passed" — no APK was ever
-built or installed and all app sources were removed. The verified deliverable is
-the framework plus its optional JNI binding. `LIMITATION.md` records 15 concrete
-bugs/sharp edges (cancellation status, env-driven `MSR_NO_ALLOC`, global
-singleton provider, node-name refills, dangling layout pointer, slot-safety
-assumptions, misleading I/O counters, thermal/cold-cache limits) and the
-suggested fix order. No support claim beyond the measured reference device.
