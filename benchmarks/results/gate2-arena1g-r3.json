@@ -1,0 +1,151 @@
+{
+ "label": "arena1g-2k-r3",
+ "cmd": [
+  "build/bin/llama-completion",
+  "-m",
+  "/storage/emulated/0/Download/gemma/medgemma-1.5-4b-it.Q4_K_M.gguf",
+  "-p",
+  "The capital of France is",
+  "-n",
+  "8",
+  "--seed",
+  "42",
+  "--temp",
+  "0",
+  "-t",
+  "4",
+  "-lm",
+  "none",
+  "--no-repack",
+  "-c",
+  "2048"
+ ],
+ "exit_code": 0,
+ "wall_s": 6.8,
+ "peak_vmhwm_mib": 1307.4,
+ "peak_rss_mib": 1307.4,
+ "peak_pss_mib": 1304.2,
+ "memavailable_before_mib": 6112.6,
+ "memavailable_after_mib": 6134.3,
+ "temp_before_c": 51.3,
+ "temp_after_c": 61.9,
+ "pss_samples": [
+  [
+   0.0,
+   0.1162109375
+  ],
+  [
+   0.2,
+   25.5361328125
+  ],
+  [
+   0.41,
+   46.5498046875
+  ],
+  [
+   0.61,
+   287.7431640625
+  ],
+  [
+   0.83,
+   727.9775390625
+  ],
+  [
+   1.05,
+   995.3603515625
+  ],
+  [
+   1.27,
+   1016.5087890625
+  ],
+  [
+   1.49,
+   1091.6376953125
+  ],
+  [
+   1.75,
+   1297.1298828125
+  ],
+  [
+   2.01,
+   1297.1298828125
+  ],
+  [
+   2.27,
+   1301.150390625
+  ],
+  [
+   2.53,
+   1301.150390625
+  ],
+  [
+   2.78,
+   1301.150390625
+  ],
+  [
+   3.05,
+   1301.150390625
+  ],
+  [
+   3.31,
+   1304.193359375
+  ],
+  [
+   3.56,
+   1304.193359375
+  ],
+  [
+   3.83,
+   1304.193359375
+  ],
+  [
+   4.06,
+   1304.193359375
+  ],
+  [
+   4.29,
+   1304.193359375
+  ],
+  [
+   4.51,
+   1304.193359375
+  ],
+  [
+   4.74,
+   1304.193359375
+  ],
+  [
+   4.99,
+   1304.193359375
+  ],
+  [
+   5.21,
+   1304.193359375
+  ],
+  [
+   5.45,
+   1304.193359375
+  ],
+  [
+   5.68,
+   1304.193359375
+  ],
+  [
+   5.92,
+   1304.193359375
+  ],
+  [
+   6.15,
+   1304.193359375
+  ],
+  [
+   6.38,
+   1304.193359375
+  ],
+  [
+   6.6,
+   1076.400390625
+  ]
+ ],
+ "output_tail": "ts type will be overridden\n0.01.515.375 I cmn          init: llama threadpool init, n_threads = 4\nmsr_external: streamed layer 8 refilled\nmsr_external: streamed layer 9 refilled\nmsr_external: streamed layer 10 refilled\nmsr_external: streamed layer 11 refilled\nmsr_external: streamed layer 12 refilled\nmsr_external: streamed layer 13 refilled\nmsr_external: streamed layer 14 refilled\nmsr_external: streamed layer 15 refilled\nmsr_external: streamed layer 16 refilled\nmsr_external: streamed layer 17 refilled\nmsr_external: streamed layer 18 refilled\nmsr_external: streamed layer 19 refilled\nmsr_external: streamed layer 20 refilled\nmsr_external: streamed layer 21 refilled\nmsr_external: streamed layer 22 refilled\nmsr_external: streamed layer 23 refilled\nmsr_external: streamed layer 24 refilled\nmsr_external: streamed layer 25 refilled\nmsr_external: streamed layer 26 refilled\nmsr_external: streamed layer 27 refilled\nmsr_external: streamed layer 28 refilled\nmsr_external: streamed layer 29 refilled\nmsr_external: streamed layer 30 refilled\nmsr_external: streamed layer 31 refilled\nmsr_external: streamed layer 32 refilled\nmsr_external: streamed layer 33 refilled\n0.02.024.185 I llama_completion: chat template is available, enabling conversation mode (disable it with -no-cnv)\n0.02.024.255 W *** User-specified prompt will pre-start conversation, did you mean to set --system-prompt (-sys) instead?\n0.02.024.354 I llama_completion: chat template example:\n<start_of_turn>user\nYou are a helpful assistant\n\nHello<end_of_turn>\n<start_of_turn>model\nHi there<end_of_turn>\n<start_of_turn>user\nHow are you?<end_of_turn>\n<start_of_turn>model\n\n0.02.024.357 I \n0.02.024.524 I system_info: n_threads = 4 (n_threads_batch = 4) / 8 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | REPACK = 1 | \n0.02.024.527 I \n0.02.024.891 I llama_completion: interactive mode on.\n0.02.024.920 I sampler seed: 4294967295\n0.02.024.933 I sampler params: \n\trepeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000\n\tdry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64\n\ttop_k = 64, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 0.000\n\tmirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900\n0.02.024.951 I sampler chain: logits -> ?penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> min-p -> ?xtc -> temp-ext -> greedy \n0.02.024.953 I generate: n_ctx = 2048, n_batch = 2048, n_predict = 8, n_keep = 1\n0.02.024.954 I \n0.02.024.955 I == Running in interactive mode. ==\n0.02.024.956 I  - Press Ctrl+C to interject at any time.\n0.02.024.957 I  - Press Return to return control to the AI.\n - To return control without starting a new line, end your input with '/'.\n - If you want to submit another line, end your input with '\\'.\n0.02.024.958 I  - Not using system message. To change it, set a different value via -sys PROMPT\n0.02.024.959 I \nuser\nThe capital of France is\nmodel\nthought\n1.  **Identify\n> EOF by user\n\n\n0.06.524.189 I common_perf_print:    sampling time =       4.25 ms\n0.06.524.192 I common_perf_print:    samplers time =       1.84 ms /    22 tokens\n0.06.524.195 I common_perf_print:        load time =     957.87 ms\n0.06.524.198 I common_perf_print: prompt eval time =    1145.36 ms /    14 tokens (   81.81 ms per token,    12.22 tokens per second)\n0.06.524.200 I common_perf_print:        eval time =    2931.42 ms /     7 runs   (  418.77 ms per token,     2.39 tokens per second)\n0.06.524.202 I common_perf_print:       total time =    4500.01 ms /    21 tokens\n0.06.524.204 I common_perf_print: unaccounted time =     418.99 ms /   9.3 %      (total - sampling - prompt eval - eval) / (total)\n0.06.524.205 I common_perf_print:    graphs reused =          7\n0.06.524.206 I common_perf_print:   graph reallocs =          0    /     0        (same size) / (changed size)\n"
+}

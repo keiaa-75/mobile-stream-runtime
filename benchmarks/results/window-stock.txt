@@ -1,0 +1,8 @@
+user
+The capital of France is
+model
+thought
+1.  **Identify the core question:** The user wants to
+> EOF by user
+
+

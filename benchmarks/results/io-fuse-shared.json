@@ -1,0 +1,61 @@
+{
+ "file": "/storage/emulated/0/gemma/medgemma-1.5-4b-it.Q4_K_M.gguf",
+ "file_bytes": 2489894624,
+ "span_mib": 1024.0,
+ "note": "FUSE shared storage; page cache not dropped (no root). Treat absolute values as best-case warm numbers.",
+ "sequential": [
+  {
+   "span_mib": 1024.0,
+   "mibs": 1419.9129883661058,
+   "seconds": 0.7562025509996602,
+   "label": "pass1_uncached"
+  },
+  {
+   "span_mib": 1024.0,
+   "mibs": 1430.5555288903035,
+   "seconds": 0.7505768230003014,
+   "label": "pass2_warm"
+  }
+ ],
+ "random": [
+  {
+   "chunk_mib": 1,
+   "median_mibs": 3465.6614476274544,
+   "p95_ms": 0.4047389993502293,
+   "min_mibs": 1294.787637654432,
+   "max_mibs": 4467.957456672624,
+   "samples": 20
+  },
+  {
+   "chunk_mib": 4,
+   "median_mibs": 1559.2236821190274,
+   "p95_ms": 3.0362500001501758,
+   "min_mibs": 1330.4910976963374,
+   "max_mibs": 1791.0025088808259,
+   "samples": 20
+  },
+  {
+   "chunk_mib": 16,
+   "median_mibs": 1390.607914453005,
+   "p95_ms": 13.06750000003376,
+   "min_mibs": 1277.1643039246076,
+   "max_mibs": 1506.6254476127554,
+   "samples": 20
+  },
+  {
+   "chunk_mib": 64,
+   "median_mibs": 1378.9177620924079,
+   "p95_ms": 51.84333400029573,
+   "min_mibs": 1287.303299270854,
+   "max_mibs": 1527.9143706936754,
+   "samples": 20
+  }
+ ],
+ "read_4k_ms": {
+  "median": 0.004010500106232939,
+  "p95": 0.005261000296741258,
+  "p99": 0.006823000148870051,
+  "max": 0.029843999982404057
+ },
+ "storage_total_mib": 2374.548553466797
+}

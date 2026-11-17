@@ -1,0 +1,165 @@
+{
+ "label": "prefetch-1t-r5",
+ "cmd": [
+  "/data/data/com.termux/files/home/mobile-stream-runtime/build/bin/llama-completion",
+  "-m",
+  "/storage/emulated/0/Download/gemma/medgemma-1.5-4b-it.Q4_K_M.gguf",
+  "-p",
+  "The capital of France is",
+  "-n",
+  "8",
+  "--seed",
+  "42",
+  "--temp",
+  "0",
+  "-t",
+  "4",
+  "-lm",
+  "none",
+  "--no-repack",
+  "-c",
+  "2048"
+ ],
+ "exit_code": 0,
+ "wall_s": 6.94,
+ "peak_vmhwm_mib": 1256.6,
+ "peak_rss_mib": 1256.6,
+ "peak_pss_mib": 1253.3,
+ "memavailable_before_mib": 6017.2,
+ "memavailable_after_mib": 6032.0,
+ "temp_before_c": 49.7,
+ "temp_after_c": 57.6,
+ "pss_samples": [
+  [
+   0.0,
+   0.1455078125
+  ],
+  [
+   0.21,
+   18.02734375
+  ],
+  [
+   0.41,
+   46.0078125
+  ],
+  [
+   0.61,
+   146.26953125
+  ],
+  [
+   0.83,
+   450.39453125
+  ],
+  [
+   1.04,
+   823.75
+  ],
+  [
+   1.26,
+   936.4736328125
+  ],
+  [
+   1.49,
+   965.31640625
+  ],
+  [
+   1.71,
+   961.9560546875
+  ],
+  [
+   1.93,
+   1246.1875
+  ],
+  [
+   2.16,
+   1246.19140625
+  ],
+  [
+   2.39,
+   1250.2431640625
+  ],
+  [
+   2.63,
+   1250.2431640625
+  ],
+  [
+   2.86,
+   1250.2431640625
+  ],
+  [
+   3.09,
+   1250.2822265625
+  ],
+  [
+   3.32,
+   1253.2861328125
+  ],
+  [
+   3.55,
+   1253.2861328125
+  ],
+  [
+   3.77,
+   1253.2861328125
+  ],
+  [
+   4.0,
+   1253.2861328125
+  ],
+  [
+   4.23,
+   1253.2861328125
+  ],
+  [
+   4.46,
+   1253.2861328125
+  ],
+  [
+   4.69,
+   1253.2861328125
+  ],
+  [
+   4.92,
+   1253.2861328125
+  ],
+  [
+   5.14,
+   1253.2861328125
+  ],
+  [
+   5.37,
+   1253.2861328125
+  ],
+  [
+   5.59,
+   1253.2861328125
+  ],
+  [
+   5.82,
+   1253.2861328125
+  ],
+  [
+   6.06,
+   1253.2861328125
+  ],
+  [
+   6.28,
+   1253.2861328125
+  ],
+  [
+   6.51,
+   1253.2861328125
+  ],
+  [
+   6.74,
+   1055.693359375
+  ]
+ ],
+ "output_tail": "er 10 ready\nmsr_external: streamed layer 11 ready\nmsr_external: streamed layer 12 ready\nmsr_external: streamed layer 13 ready\nmsr_external: streamed layer 14 ready\nmsr_external: streamed layer 15 ready\nmsr_external: streamed layer 16 ready\nmsr_external: streamed layer 17 ready\nmsr_external: streamed layer 18 ready\nmsr_external: streamed layer 19 ready\nmsr_external: streamed layer 20 ready\nmsr_external: streamed layer 21 ready\nmsr_external: streamed layer 22 ready\nmsr_external: streamed layer 23 ready\nmsr_external: streamed layer 24 ready\nmsr_external: streamed layer 25 ready\nmsr_external: streamed layer 26 ready\nmsr_external: streamed layer 27 ready\nmsr_external: streamed layer 28 ready\nmsr_external: streamed layer 29 ready\nmsr_external: streamed layer 30 ready\nmsr_external: streamed layer 31 ready\nmsr_external: streamed layer 32 ready\nmsr_external: streamed layer 33 ready\n0.02.280.965 I llama_completion: chat template is available, enabling conversation mode (disable it with -no-cnv)\n0.02.281.007 W *** User-specified prompt will pre-start conversation, did you mean to set --system-prompt (-sys) instead?\n0.02.281.124 I llama_completion: chat template example:\n<start_of_turn>user\nYou are a helpful assistant\n\nHello<end_of_turn>\n<start_of_turn>model\nHi there<end_of_turn>\n<start_of_turn>user\nHow are you?<end_of_turn>\n<start_of_turn>model\n\n0.02.281.127 I \n0.02.281.318 I system_info: n_threads = 4 (n_threads_batch = 4) / 8 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | REPACK = 1 | \n0.02.281.362 I \n0.02.281.817 I llama_completion: interactive mode on.\n0.02.281.838 I sampler seed: 4294967295\n0.02.281.850 I sampler params: \n\trepeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000\n\tdry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64\n\ttop_k = 64, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 0.000\n\tmirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900\n0.02.281.858 I sampler chain: logits -> ?penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> min-p -> ?xtc -> temp-ext -> greedy \n0.02.281.859 I generate: n_ctx = 2048, n_batch = 2048, n_predict = 8, n_keep = 1\n0.02.281.860 I \n0.02.281.860 I == Running in interactive mode. ==\n0.02.281.861 I  - Press Ctrl+C to interject at any time.\n0.02.281.862 I  - Press Return to return control to the AI.\n - To return control without starting a new line, end your input with '/'.\n - If you want to submit another line, end your input with '\\'.\n0.02.281.862 I  - Not using system message. To change it, set a different value via -sys PROMPT\n0.02.281.862 I \nuser\nThe capital of France is\nmodel\nthought\n1.  **Identify\n> EOF by user\n\n\n0.06.664.329 I common_perf_print:    sampling time =       5.06 ms\n0.06.664.331 I common_perf_print:    samplers time =       2.21 ms /    22 tokens\n0.06.664.334 I common_perf_print:        load time =    1060.89 ms\n0.06.664.337 I common_perf_print: prompt eval time =     842.44 ms /    14 tokens (   60.17 ms per token,    16.62 tokens per second)\n0.06.664.339 I common_perf_print:        eval time =    3083.06 ms /     7 runs   (  440.44 ms per token,     2.27 tokens per second)\n0.06.664.341 I common_perf_print:       total time =    4383.37 ms /    21 tokens\n0.06.664.343 I common_perf_print: unaccounted time =     452.82 ms /  10.3 %      (total - sampling - prompt eval - eval) / (total)\n0.06.664.344 I common_perf_print:    graphs reused =          7\n0.06.664.345 I common_perf_print:   graph reallocs =          0    /     0        (same size) / (changed size)\nmsr_external: arena_peak_bytes=1020289024 arena_current_bytes=1020289024\nmsr_external: reads_submitted=3640 reads_completed=3640 reads_failed=0 reads_dropped=0 read_bytes=15842058240 read_io_ns=3963516204 read_wait_ns=2734084549 read_submit_block_ns=287741 read_peak_depth=13\n",
+ "config": "prefetch-1t",
+ "eval_tok_s": 2.2704715445044856,
+ "prompt_tok_s": 16.618394188310145,
+ "read_stats": [
+  "reads_submitted=3640 reads_completed=3640 reads_failed=0 reads_dropped=0 read_bytes=15842058240 read_io_ns=3963516204 read_wait_ns=2734084549 read_submit_block_ns=287741 read_peak_depth=13"
+ ]
+}

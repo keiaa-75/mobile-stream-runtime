@@ -1,0 +1,19 @@
+# Build outputs
+/build/
+/native/build/
+*.o
+*.a
+*.so
+
+# Model weights are assets, never committed (see README)
+*.gguf
+*.bin
+*.safetensors
+
+# Python
+__pycache__/
+*.pyc
+
+# Local noise
+*.log
+.DS_Store

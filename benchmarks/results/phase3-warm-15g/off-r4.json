@@ -1,0 +1,185 @@
+{
+ "label": "off-r4",
+ "cmd": [
+  "/data/data/com.termux/files/home/mobile-stream-runtime/build/bin/llama-completion",
+  "-m",
+  "/storage/emulated/0/Download/gemma/medgemma-1.5-4b-it.Q4_K_M.gguf",
+  "-p",
+  "The capital of France is",
+  "-n",
+  "8",
+  "--seed",
+  "42",
+  "--temp",
+  "0",
+  "-t",
+  "4",
+  "-lm",
+  "none",
+  "--no-repack",
+  "-c",
+  "2048"
+ ],
+ "exit_code": 0,
+ "wall_s": 8.9,
+ "peak_vmhwm_mib": 1784.2,
+ "peak_rss_mib": 1784.2,
+ "peak_pss_mib": 1780.9,
+ "memavailable_before_mib": 5665.8,
+ "memavailable_after_mib": 5701.2,
+ "temp_before_c": 48.5,
+ "temp_after_c": 53.2,
+ "pss_samples": [
+  [
+   0.0,
+   0.0517578125
+  ],
+  [
+   0.21,
+   33.359375
+  ],
+  [
+   0.41,
+   46.0654296875
+  ],
+  [
+   0.61,
+   122.8740234375
+  ],
+  [
+   0.82,
+   335.7919921875
+  ],
+  [
+   1.21,
+   708.9599609375
+  ],
+  [
+   1.43,
+   1054.1318359375
+  ],
+  [
+   1.67,
+   1366.8505859375
+  ],
+  [
+   1.9,
+   1476.28515625
+  ],
+  [
+   2.14,
+   1493.1083984375
+  ],
+  [
+   2.38,
+   1483.4755859375
+  ],
+  [
+   2.66,
+   1704.65625
+  ],
+  [
+   2.94,
+   1715.8115234375
+  ],
+  [
+   3.18,
+   1773.771484375
+  ],
+  [
+   3.42,
+   1773.771484375
+  ],
+  [
+   3.69,
+   1777.8212890625
+  ],
+  [
+   3.95,
+   1777.8212890625
+  ],
+  [
+   4.2,
+   1777.8212890625
+  ],
+  [
+   4.47,
+   1777.8212890625
+  ],
+  [
+   4.73,
+   1777.8212890625
+  ],
+  [
+   4.98,
+   1777.8603515625
+  ],
+  [
+   5.22,
+   1780.8642578125
+  ],
+  [
+   5.46,
+   1780.8642578125
+  ],
+  [
+   5.72,
+   1780.8642578125
+  ],
+  [
+   5.97,
+   1780.8642578125
+  ],
+  [
+   6.21,
+   1780.8642578125
+  ],
+  [
+   6.47,
+   1780.8642578125
+  ],
+  [
+   6.71,
+   1780.8642578125
+  ],
+  [
+   6.95,
+   1780.8642578125
+  ],
+  [
+   7.21,
+   1780.8642578125
+  ],
+  [
+   7.46,
+   1780.8642578125
+  ],
+  [
+   7.7,
+   1780.8642578125
+  ],
+  [
+   7.95,
+   1780.8642578125
+  ],
+  [
+   8.2,
+   1780.8642578125
+  ],
+  [
+   8.44,
+   1780.8642578125
+  ],
+  [
+   8.7,
+   1536.45703125
+  ]
+ ],
+ "output_tail": "ternal: bound_tensors=444\n0.02.227.207 W load: control-looking token:    212 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden\n0.02.531.279 I cmn          init: llama threadpool init, n_threads = 4\nmsr_external: streamed layer 17 ready\nmsr_external: streamed layer 18 ready\nmsr_external: streamed layer 19 ready\nmsr_external: streamed layer 20 ready\nmsr_external: streamed layer 21 ready\nmsr_external: streamed layer 22 ready\nmsr_external: streamed layer 23 ready\nmsr_external: streamed layer 24 ready\nmsr_external: streamed layer 25 ready\nmsr_external: streamed layer 26 ready\nmsr_external: streamed layer 27 ready\nmsr_external: streamed layer 28 ready\nmsr_external: streamed layer 29 ready\nmsr_external: streamed layer 30 ready\nmsr_external: streamed layer 31 ready\nmsr_external: streamed layer 32 ready\nmsr_external: streamed layer 33 ready\n0.03.455.761 I llama_completion: chat template is available, enabling conversation mode (disable it with -no-cnv)\n0.03.455.788 W *** User-specified prompt will pre-start conversation, did you mean to set --system-prompt (-sys) instead?\n0.03.455.861 I llama_completion: chat template example:\n<start_of_turn>user\nYou are a helpful assistant\n\nHello<end_of_turn>\n<start_of_turn>model\nHi there<end_of_turn>\n<start_of_turn>user\nHow are you?<end_of_turn>\n<start_of_turn>model\n\n0.03.455.863 I \n0.03.456.006 I system_info: n_threads = 4 (n_threads_batch = 4) / 8 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | REPACK = 1 | \n0.03.456.006 I \n0.03.456.315 I llama_completion: interactive mode on.\n0.03.456.329 I sampler seed: 4294967295\n0.03.456.339 I sampler params: \n\trepeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000\n\tdry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64\n\ttop_k = 64, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 0.000\n\tmirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900\n0.03.456.346 I sampler chain: logits -> ?penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> min-p -> ?xtc -> temp-ext -> greedy \n0.03.456.346 I generate: n_ctx = 2048, n_batch = 2048, n_predict = 8, n_keep = 1\n0.03.456.347 I \n0.03.456.347 I == Running in interactive mode. ==\n0.03.456.347 I  - Press Ctrl+C to interject at any time.\n0.03.456.348 I  - Press Return to return control to the AI.\n - To return control without starting a new line, end your input with '/'.\n - If you want to submit another line, end your input with '\\'.\n0.03.456.348 I  - Not using system message. To change it, set a different value via -sys PROMPT\n0.03.456.349 I \nuser\nThe capital of France is\nmodel\nthought\n1.  **Identify\n> EOF by user\n\n\n0.08.462.788 I common_perf_print:    sampling time =       5.10 ms\n0.08.462.789 I common_perf_print:    samplers time =       2.28 ms /    22 tokens\n0.08.462.792 I common_perf_print:        load time =    1550.50 ms\n0.08.462.794 I common_perf_print: prompt eval time =    1491.60 ms /    14 tokens (  106.54 ms per token,     9.39 tokens per second)\n0.08.462.797 I common_perf_print:        eval time =    3070.65 ms /     7 runs   (  438.66 ms per token,     2.28 tokens per second)\n0.08.462.798 I common_perf_print:       total time =    5007.03 ms /    21 tokens\n0.08.462.800 I common_perf_print: unaccounted time =     439.68 ms /   8.8 %      (total - sampling - prompt eval - eval) / (total)\n0.08.462.801 I common_perf_print:    graphs reused =          7\n0.08.462.802 I common_perf_print:   graph reallocs =          0    /     0        (same size) / (changed size)\nmsr_external: arena_peak_bytes=1573883904 arena_current_bytes=1573883904\nmsr_external: reads_submitted=2210 reads_completed=2210 reads_failed=0 reads_dropped=0 read_bytes=9700700160 read_io_ns=2773146084 read_wait_ns=3272900850 read_submit_block_ns=227572 read_peak_depth=1\n",
+ "config": "off",
+ "eval_tok_s": 2.2796476316089427,
+ "prompt_tok_s": 9.385894341646555,
+ "read_stats": [
+  "reads_submitted=2210 reads_completed=2210 reads_failed=0 reads_dropped=0 read_bytes=9700700160 read_io_ns=2773146084 read_wait_ns=3272900850 read_submit_block_ns=227572 read_peak_depth=1"
+ ]
+}

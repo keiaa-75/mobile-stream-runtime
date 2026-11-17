@@ -1,0 +1,145 @@
+{
+ "label": "prefetch-4t-r5",
+ "cmd": [
+  "/data/data/com.termux/files/home/mobile-stream-runtime/build/bin/llama-completion",
+  "-m",
+  "/storage/emulated/0/Download/gemma/medgemma-1.5-4b-it.Q4_K_M.gguf",
+  "-p",
+  "The capital of France is",
+  "-n",
+  "8",
+  "--seed",
+  "42",
+  "--temp",
+  "0",
+  "-t",
+  "4",
+  "-lm",
+  "none",
+  "--no-repack",
+  "-c",
+  "2048"
+ ],
+ "exit_code": 0,
+ "wall_s": 6.38,
+ "peak_vmhwm_mib": 1790.5,
+ "peak_rss_mib": 1790.5,
+ "peak_pss_mib": 1787.8,
+ "memavailable_before_mib": 5648.6,
+ "memavailable_after_mib": 5820.3,
+ "temp_before_c": 50.1,
+ "temp_after_c": 58.4,
+ "pss_samples": [
+  [
+   0.0,
+   0.0283203125
+  ],
+  [
+   0.2,
+   41.046875
+  ],
+  [
+   0.41,
+   46.13671875
+  ],
+  [
+   0.61,
+   148.98828125
+  ],
+  [
+   0.82,
+   363.0703125
+  ],
+  [
+   1.04,
+   577.9453125
+  ],
+  [
+   1.34,
+   804.265625
+  ],
+  [
+   1.56,
+   1038.58984375
+  ],
+  [
+   1.79,
+   1369.9453125
+  ],
+  [
+   2.02,
+   1451.61328125
+  ],
+  [
+   2.26,
+   1493.2578125
+  ],
+  [
+   2.5,
+   1549.83203125
+  ],
+  [
+   2.76,
+   1739.314453125
+  ],
+  [
+   3.01,
+   1739.9091796875
+  ],
+  [
+   3.3,
+   1784.72265625
+  ],
+  [
+   3.58,
+   1784.72265625
+  ],
+  [
+   3.85,
+   1784.72265625
+  ],
+  [
+   4.12,
+   1787.765625
+  ],
+  [
+   4.38,
+   1787.765625
+  ],
+  [
+   4.63,
+   1787.765625
+  ],
+  [
+   4.89,
+   1787.765625
+  ],
+  [
+   5.15,
+   1787.765625
+  ],
+  [
+   5.41,
+   1787.765625
+  ],
+  [
+   5.68,
+   1787.765625
+  ],
+  [
+   5.94,
+   1787.765625
+  ],
+  [
+   6.18,
+   1552.16796875
+  ]
+ ],
+ "output_tail": "W load: control-looking token:    212 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden\n0.02.608.546 I cmn          init: llama threadpool init, n_threads = 4\nmsr_external: streamed layer 16 ready\nmsr_external: streamed layer 17 ready\nmsr_external: streamed layer 18 ready\nmsr_external: streamed layer 19 ready\nmsr_external: streamed layer 20 ready\nmsr_external: streamed layer 21 ready\nmsr_external: streamed layer 22 ready\nmsr_external: streamed layer 23 ready\nmsr_external: streamed layer 24 ready\nmsr_external: streamed layer 25 ready\nmsr_external: streamed layer 26 ready\nmsr_external: streamed layer 27 ready\nmsr_external: streamed layer 28 ready\nmsr_external: streamed layer 29 ready\nmsr_external: streamed layer 30 ready\nmsr_external: streamed layer 31 ready\nmsr_external: streamed layer 32 ready\nmsr_external: streamed layer 33 ready\n0.03.000.599 I llama_completion: chat template is available, enabling conversation mode (disable it with -no-cnv)\n0.03.000.648 W *** User-specified prompt will pre-start conversation, did you mean to set --system-prompt (-sys) instead?\n0.03.000.778 I llama_completion: chat template example:\n<start_of_turn>user\nYou are a helpful assistant\n\nHello<end_of_turn>\n<start_of_turn>model\nHi there<end_of_turn>\n<start_of_turn>user\nHow are you?<end_of_turn>\n<start_of_turn>model\n\n0.03.000.809 I \n0.03.001.284 I system_info: n_threads = 4 (n_threads_batch = 4) / 8 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | REPACK = 1 | \n0.03.001.319 I \n0.03.001.809 I llama_completion: interactive mode on.\n0.03.001.849 I sampler seed: 4294967295\n0.03.001.866 I sampler params: \n\trepeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000\n\tdry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64\n\ttop_k = 64, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 0.000\n\tmirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900\n0.03.001.875 I sampler chain: logits -> ?penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> min-p -> ?xtc -> temp-ext -> greedy \n0.03.001.897 I generate: n_ctx = 2048, n_batch = 2048, n_predict = 8, n_keep = 1\n0.03.001.899 I \n0.03.001.900 I == Running in interactive mode. ==\n0.03.001.901 I  - Press Ctrl+C to interject at any time.\n0.03.001.903 I  - Press Return to return control to the AI.\n - To return control without starting a new line, end your input with '/'.\n - If you want to submit another line, end your input with '\\'.\n0.03.001.904 I  - Not using system message. To change it, set a different value via -sys PROMPT\n0.03.001.905 I \nuser\nThe capital of France is\nmodel\nthought\n1.  **Identify\n> EOF by user\n\n\n0.06.086.905 I common_perf_print:    sampling time =       5.62 ms\n0.06.086.908 I common_perf_print:    samplers time =       2.24 ms /    22 tokens\n0.06.086.913 I common_perf_print:        load time =     957.12 ms\n0.06.086.916 I common_perf_print: prompt eval time =     988.54 ms /    14 tokens (   70.61 ms per token,    14.16 tokens per second)\n0.06.086.920 I common_perf_print:        eval time =    1843.13 ms /     7 runs   (  263.31 ms per token,     3.80 tokens per second)\n0.06.086.923 I common_perf_print:       total time =    3086.32 ms /    21 tokens\n0.06.086.926 I common_perf_print: unaccounted time =     249.03 ms /   8.1 %      (total - sampling - prompt eval - eval) / (total)\n0.06.086.927 I common_perf_print:    graphs reused =          7\n0.06.086.929 I common_perf_print:   graph reallocs =          0    /     0        (same size) / (changed size)\nmsr_external: arena_peak_bytes=1581318144 arena_current_bytes=1581318144\nmsr_external: reads_submitted=2340 reads_completed=2340 reads_failed=0 reads_dropped=0 read_bytes=10231971840 read_io_ns=4546777576 read_wait_ns=851506430 read_submit_block_ns=234668 read_peak_depth=13\n",
+ "config": "prefetch-4t",
+ "eval_tok_s": 3.7978872895563525,
+ "prompt_tok_s": 14.1622999575131,
+ "read_stats": [
+  "reads_submitted=2340 reads_completed=2340 reads_failed=0 reads_dropped=0 read_bytes=10231971840 read_io_ns=4546777576 read_wait_ns=851506430 read_submit_block_ns=234668 read_peak_depth=13"
+ ]
+}

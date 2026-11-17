@@ -1,0 +1,133 @@
+{
+ "budget_bytes": 1073741824,
+ "model": "/storage/emulated/0/Download/gemma/medgemma-1.5-4b-it.Q4_K_M.gguf",
+ "prompt": "The capital of France is",
+ "tokens": 8,
+ "ctx": 2048,
+ "threads": 4,
+ "runs_per_config": 5,
+ "configs": {
+  "off": {},
+  "prefetch-1t": {
+   "MSR_PREFETCH": "1",
+   "MSR_READ_THREADS": "1"
+  },
+  "prefetch-4t": {
+   "MSR_PREFETCH": "1",
+   "MSR_READ_THREADS": "4"
+  }
+ },
+ "summary": {
+  "off": {
+   "eval_tok_s": {
+    "n": 5,
+    "median": 2.06,
+    "min": 1.95,
+    "max": 2.23,
+    "spread": 0.29
+   },
+   "prompt_tok_s": {
+    "n": 5,
+    "median": 12.11,
+    "min": 9.4,
+    "max": 12.9,
+    "spread": 3.5
+   },
+   "vmhwm_mib": {
+    "n": 5,
+    "median": 1306.9,
+    "min": 1306.7,
+    "max": 1307.2,
+    "spread": 0.5
+   },
+   "pss_mib": {
+    "n": 5,
+    "median": 1303.5,
+    "min": 1303.4,
+    "max": 1303.6,
+    "spread": 0.2
+   },
+   "wall_s": {
+    "n": 5,
+    "median": 7.8,
+    "min": 7.58,
+    "max": 8.54,
+    "spread": 0.96
+   }
+  },
+  "prefetch-1t": {
+   "eval_tok_s": {
+    "n": 5,
+    "median": 2.27,
+    "min": 2.19,
+    "max": 2.43,
+    "spread": 0.24
+   },
+   "prompt_tok_s": {
+    "n": 5,
+    "median": 16.62,
+    "min": 15.41,
+    "max": 20.09,
+    "spread": 4.69
+   },
+   "vmhwm_mib": {
+    "n": 5,
+    "median": 1256.2,
+    "min": 1256.0,
+    "max": 1256.6,
+    "spread": 0.6
+   },
+   "pss_mib": {
+    "n": 5,
+    "median": 1253.0,
+    "min": 1252.9,
+    "max": 1253.3,
+    "spread": 0.4
+   },
+   "wall_s": {
+    "n": 5,
+    "median": 6.94,
+    "min": 6.26,
+    "max": 7.09,
+    "spread": 0.83
+   }
+  },
+  "prefetch-4t": {
+   "eval_tok_s": {
+    "n": 5,
+    "median": 3.0,
+    "min": 2.85,
+    "max": 3.29,
+    "spread": 0.44
+   },
+   "prompt_tok_s": {
+    "n": 5,
+    "median": 15.15,
+    "min": 14.13,
+    "max": 17.44,
+    "spread": 3.32
+   },
+   "vmhwm_mib": {
+    "n": 5,
+    "median": 1255.8,
+    "min": 1255.7,
+    "max": 1256.3,
+    "spread": 0.6
+   },
+   "pss_mib": {
+    "n": 5,
+    "median": 1252.9,
+    "min": 1252.8,
+    "max": 1253.4,
+    "spread": 0.6
+   },
+   "wall_s": {
+    "n": 5,
+    "median": 6.11,
+    "min": 5.66,
+    "max": 6.28,
+    "spread": 0.62
+   }
+  }
+ }
+}

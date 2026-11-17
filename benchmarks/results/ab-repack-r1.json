@@ -1,0 +1,166 @@
+{
+ "label": "ab-repack-r1",
+ "cmd": [
+  "build/bin/llama-completion",
+  "-m",
+  "/storage/emulated/0/gemma/medgemma-1.5-4b-it.Q4_K_M.gguf",
+  "-p",
+  "Describe the normal anatomy visible on a chest X-ray in two sentences.",
+  "-n",
+  "32",
+  "-c",
+  "2048",
+  "-b",
+  "256",
+  "-ub",
+  "256",
+  "-t",
+  "4",
+  "-st",
+  "--no-warmup"
+ ],
+ "exit_code": 0,
+ "wall_s": 11.28,
+ "peak_vmhwm_mib": 4970.5,
+ "peak_rss_mib": 4970.5,
+ "peak_pss_mib": 4967.5,
+ "memavailable_before_mib": 5968.1,
+ "memavailable_after_mib": 6546.7,
+ "temp_before_c": 53.6,
+ "temp_after_c": 62.3,
+ "pss_samples": [
+  [
+   0.0,
+   0.115234375
+  ],
+  [
+   0.2,
+   42.705078125
+  ],
+  [
+   0.41,
+   53.6845703125
+  ],
+  [
+   0.61,
+   50.6767578125
+  ],
+  [
+   0.81,
+   50.6806640625
+  ],
+  [
+   1.1,
+   2429.1455078125
+  ],
+  [
+   1.4,
+   2706.6494140625
+  ],
+  [
+   1.7,
+   2993.9111328125
+  ],
+  [
+   2.02,
+   3301.0556640625
+  ],
+  [
+   2.33,
+   3303.9033203125
+  ],
+  [
+   2.63,
+   3378.3330078125
+  ],
+  [
+   2.94,
+   3582.9580078125
+  ],
+  [
+   3.26,
+   3938.6982421875
+  ],
+  [
+   3.58,
+   4285.77734375
+  ],
+  [
+   3.95,
+   4672.1181640625
+  ],
+  [
+   4.3,
+   4964.0068359375
+  ],
+  [
+   4.65,
+   4964.1435546875
+  ],
+  [
+   5.02,
+   4964.1630859375
+  ],
+  [
+   5.63,
+   4964.2099609375
+  ],
+  [
+   6.26,
+   4964.4404296875
+  ],
+  [
+   6.63,
+   4967.5107421875
+  ],
+  [
+   7.14,
+   4967.5107421875
+  ],
+  [
+   7.5,
+   4967.5029296875
+  ],
+  [
+   7.86,
+   4967.5029296875
+  ],
+  [
+   8.21,
+   4967.5029296875
+  ],
+  [
+   8.6,
+   4967.5029296875
+  ],
+  [
+   8.95,
+   4949.4287109375
+  ],
+  [
+   9.4,
+   4876.6904296875
+  ],
+  [
+   9.78,
+   4828.314453125
+  ],
+  [
+   10.15,
+   4774.333984375
+  ],
+  [
+   10.59,
+   4720.728515625
+  ],
+  [
+   10.87,
+   2137.357421875
+  ],
+  [
+   11.08,
+   49.896484375
+  ]
+ ],
+ "output_tail": "0.00.001.735 I llama_completion: llama backend init\n0.00.003.208 I llama_completion: load the model and apply lora adapter, if any\n0.00.766.469 W load: control-looking token:    212 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden\n0.04.023.489 I cmn          init: llama threadpool init, n_threads = 4\n0.04.058.467 I llama_completion: chat template is available, enabling conversation mode (disable it with -no-cnv)\n0.04.058.499 W *** User-specified prompt will pre-start conversation, did you mean to set --system-prompt (-sys) instead?\n0.04.060.072 I llama_completion: chat template example:\n<start_of_turn>user\nYou are a helpful assistant\n\nHello<end_of_turn>\n<start_of_turn>model\nHi there<end_of_turn>\n<start_of_turn>user\nHow are you?<end_of_turn>\n<start_of_turn>model\n\n0.04.060.105 I \n0.04.060.663 I system_info: n_threads = 4 (n_threads_batch = 4) / 8 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | REPACK = 1 | \n0.04.060.718 I \n0.04.061.629 I sampler seed: 615921844\n0.04.061.661 I sampler params: \n\trepeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000\n\tdry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64\n\ttop_k = 64, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 0.800\n\tmirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900\n0.04.061.669 I sampler chain: logits -> ?penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> min-p -> ?xtc -> temp-ext -> dist \n0.04.061.670 I generate: n_ctx = 2048, n_batch = 256, n_predict = 32, n_keep = 1\n0.04.061.671 I \nuser\nDescribe the normal anatomy visible on a chest X-ray in two sentences.\nmodel\nA chest X-ray typically shows the heart in the center, the lungs extending to the edges, the ribs forming the cage, and the major blood vessels like\n\n0.24.941.368 I common_perf_print:    sampling time =     430.50 ms\n0.24.941.370 I common_perf_print:    samplers time =       8.58 ms /    56 tokens\n0.24.941.372 I common_perf_print:        load time =    1774.43 ms\n0.24.941.374 I common_perf_print: prompt eval time =    1771.11 ms /    24 tokens (   73.80 ms per token,    13.55 tokens per second)\n0.24.941.376 I common_perf_print:        eval time =    4441.73 ms /    31 runs   (  143.28 ms per token,     6.98 tokens per second)\n0.24.941.377 I common_perf_print:       total time =    6649.83 ms /    55 tokens\n0.24.941.379 I common_perf_print: unaccounted time =       6.49 ms /   0.1 %      (total - sampling - prompt eval - eval) / (total)\n0.24.941.380 I common_perf_print:    graphs reused =         30\n0.24.941.381 I common_perf_print:   graph reallocs =          0    /     0        (same size) / (changed size)\n"
+}

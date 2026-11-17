@@ -1,0 +1,136 @@
+{
+ "label": "baseline-auto-2k-b256",
+ "cmd": [
+  "build/bin/llama-completion",
+  "-m",
+  "/storage/emulated/0/gemma/medgemma-1.5-4b-it.Q4_K_M.gguf",
+  "-p",
+  "Describe the normal anatomy visible on a chest X-ray in two sentences.",
+  "-n",
+  "32",
+  "-c",
+  "2048",
+  "-b",
+  "256",
+  "-ub",
+  "256",
+  "-t",
+  "4",
+  "-st",
+  "--no-warmup"
+ ],
+ "exit_code": 0,
+ "wall_s": 8.43,
+ "peak_vmhwm_mib": 4984.4,
+ "peak_rss_mib": 4984.4,
+ "peak_pss_mib": 4981.3,
+ "memavailable_before_mib": 6097.8,
+ "memavailable_after_mib": 6333.8,
+ "pss_samples": [
+  [
+   0.0,
+   0.095703125
+  ],
+  [
+   0.2,
+   42.3583984375
+  ],
+  [
+   0.41,
+   46.5029296875
+  ],
+  [
+   0.61,
+   50.2373046875
+  ],
+  [
+   0.81,
+   50.2373046875
+  ],
+  [
+   1.08,
+   1883.6982421875
+  ],
+  [
+   1.38,
+   2620.1787109375
+  ],
+  [
+   1.69,
+   2988.5341796875
+  ],
+  [
+   2.01,
+   3370.8583984375
+  ],
+  [
+   2.33,
+   3785.6435546875
+  ],
+  [
+   2.67,
+   4208.8232421875
+  ],
+  [
+   2.99,
+   4464.8544921875
+  ],
+  [
+   3.28,
+   4693.359375
+  ],
+  [
+   3.59,
+   4925.2099609375
+  ],
+  [
+   3.99,
+   4978.1376953125
+  ],
+  [
+   4.4,
+   4938.568359375
+  ],
+  [
+   4.81,
+   4981.3447265625
+  ],
+  [
+   5.19,
+   4981.3447265625
+  ],
+  [
+   5.57,
+   4981.34375
+  ],
+  [
+   6.03,
+   4981.34375
+  ],
+  [
+   6.51,
+   4981.34375
+  ],
+  [
+   6.97,
+   4981.34375
+  ],
+  [
+   7.43,
+   4981.34375
+  ],
+  [
+   7.73,
+   2601.7265625
+  ],
+  [
+   8.02,
+   2420.8359375
+  ],
+  [
+   8.23,
+   38.26171875
+  ]
+ ],
+ "output_tail": "0.00.010.044 I llama_completion: llama backend init\n0.00.011.654 I llama_completion: load the model and apply lora adapter, if any\n0.00.813.293 W load: control-looking token:    212 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden\n0.03.572.168 I cmn          init: llama threadpool init, n_threads = 4\n0.03.576.982 I llama_completion: chat template is available, enabling conversation mode (disable it with -no-cnv)\n0.03.577.086 W *** User-specified prompt will pre-start conversation, did you mean to set --system-prompt (-sys) instead?\n0.03.577.248 I llama_completion: chat template example:\n<start_of_turn>user\nYou are a helpful assistant\n\nHello<end_of_turn>\n<start_of_turn>model\nHi there<end_of_turn>\n<start_of_turn>user\nHow are you?<end_of_turn>\n<start_of_turn>model\n\n0.03.577.312 I \n0.03.577.527 I system_info: n_threads = 4 (n_threads_batch = 4) / 8 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | REPACK = 1 | \n0.03.577.595 I \n0.03.581.286 I sampler seed: 3277056986\n0.03.581.381 I sampler params: \n\trepeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000\n\tdry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64\n\ttop_k = 64, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 0.800\n\tmirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900\n0.03.581.444 I sampler chain: logits -> ?penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> min-p -> ?xtc -> temp-ext -> dist \n0.03.581.494 I generate: n_ctx = 2048, n_batch = 256, n_predict = 32, n_keep = 1\n0.03.581.534 I \nuser\nDescribe the normal anatomy visible on a chest X-ray in two sentences.\nmodel\nA chest X-ray typically shows the lungs as dark, spongy-looking areas, the heart positioned centrally, and the bony rib cage surrounding the lung fields.\n\n0.07.651.072 I common_perf_print:    sampling time =      45.00 ms\n0.07.651.074 I common_perf_print:    samplers time =       8.69 ms /    56 tokens\n0.07.651.076 I common_perf_print:        load time =     774.47 ms\n0.07.651.078 I common_perf_print: prompt eval time =     769.13 ms /    24 tokens (   32.05 ms per token,    31.20 tokens per second)\n0.07.651.080 I common_perf_print:        eval time =    3251.74 ms /    31 runs   (  104.89 ms per token,     9.53 tokens per second)\n0.07.651.081 I common_perf_print:       total time =    4074.10 ms /    55 tokens\n0.07.651.083 I common_perf_print: unaccounted time =       8.23 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.07.651.084 I common_perf_print:    graphs reused =         30\n0.07.651.085 I common_perf_print:   graph reallocs =          0    /     0        (same size) / (changed size)\n"
+}

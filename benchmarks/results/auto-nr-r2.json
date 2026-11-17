@@ -1,0 +1,107 @@
+{
+ "label": "auto-nr-r2",
+ "cmd": [
+  "build/bin/llama-completion",
+  "-m",
+  "/storage/emulated/0/gemma/medgemma-1.5-4b-it.Q4_K_M.gguf",
+  "-p",
+  "Describe the normal anatomy visible on a chest X-ray in two sentences.",
+  "-n",
+  "32",
+  "-c",
+  "2048",
+  "-b",
+  "256",
+  "-ub",
+  "256",
+  "-t",
+  "4",
+  "-st",
+  "--no-warmup",
+  "-lm",
+  "auto",
+  "--no-repack"
+ ],
+ "exit_code": 0,
+ "wall_s": 5.18,
+ "peak_vmhwm_mib": 2623.9,
+ "peak_rss_mib": 2623.9,
+ "peak_pss_mib": 2620.8,
+ "memavailable_before_mib": 6090.6,
+ "memavailable_after_mib": 6096.4,
+ "pss_samples": [
+  [
+   0.0,
+   0.111328125
+  ],
+  [
+   0.2,
+   41.783203125
+  ],
+  [
+   0.41,
+   35.6435546875
+  ],
+  [
+   0.61,
+   50.1005859375
+  ],
+  [
+   0.81,
+   50.1005859375
+  ],
+  [
+   1.11,
+   2428.15625
+  ],
+  [
+   1.43,
+   2617.6845703125
+  ],
+  [
+   1.74,
+   2617.6845703125
+  ],
+  [
+   2.06,
+   2617.6845703125
+  ],
+  [
+   2.4,
+   2620.8330078125
+  ],
+  [
+   2.74,
+   2620.8330078125
+  ],
+  [
+   3.09,
+   2620.8330078125
+  ],
+  [
+   3.43,
+   2620.8330078125
+  ],
+  [
+   3.76,
+   2620.8330078125
+  ],
+  [
+   4.1,
+   2620.8330078125
+  ],
+  [
+   4.45,
+   2620.8330078125
+  ],
+  [
+   4.78,
+   2615.2490234375
+  ],
+  [
+   4.98,
+   11.7939453125
+  ]
+ ],
+ "output_tail": "0.00.001.820 I llama_completion: llama backend init\n0.00.003.438 I llama_completion: load the model and apply lora adapter, if any\n0.00.778.762 W load: control-looking token:    212 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden\n0.01.174.280 I cmn          init: llama threadpool init, n_threads = 4\n0.01.178.233 I llama_completion: chat template is available, enabling conversation mode (disable it with -no-cnv)\n0.01.178.261 W *** User-specified prompt will pre-start conversation, did you mean to set --system-prompt (-sys) instead?\n0.01.178.363 I llama_completion: chat template example:\n<start_of_turn>user\nYou are a helpful assistant\n\nHello<end_of_turn>\n<start_of_turn>model\nHi there<end_of_turn>\n<start_of_turn>user\nHow are you?<end_of_turn>\n<start_of_turn>model\n\n0.01.178.384 I \n0.01.178.570 I system_info: n_threads = 4 (n_threads_batch = 4) / 8 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | REPACK = 1 | \n0.01.178.589 I \n0.01.179.095 I sampler seed: 3791720451\n0.01.179.200 I sampler params: \n\trepeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000\n\tdry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64\n\ttop_k = 64, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 0.800\n\tmirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900\n0.01.179.221 I sampler chain: logits -> ?penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> min-p -> ?xtc -> temp-ext -> dist \n0.01.179.234 I generate: n_ctx = 2048, n_batch = 256, n_predict = 32, n_keep = 1\n0.01.179.235 I \nuser\nDescribe the normal anatomy visible on a chest X-ray in two sentences.\nmodel\nThe chest X-ray typically shows the lungs appearing as dark, sponge-like structures with clear borders, the heart positioned centrally, and the ribs forming the cage\n\n0.04.731.688 I common_perf_print:    sampling time =      11.08 ms\n0.04.731.690 I common_perf_print:    samplers time =       5.91 ms /    56 tokens\n0.04.731.692 I common_perf_print:        load time =    1033.90 ms\n0.04.731.695 I common_perf_print: prompt eval time =    1032.75 ms /    24 tokens (   43.03 ms per token,    23.24 tokens per second)\n0.04.731.697 I common_perf_print:        eval time =    2505.86 ms /    31 runs   (   80.83 ms per token,    12.37 tokens per second)\n0.04.731.698 I common_perf_print:       total time =    3553.46 ms /    55 tokens\n0.04.731.700 I common_perf_print: unaccounted time =       3.78 ms /   0.1 %      (total - sampling - prompt eval - eval) / (total)\n0.04.731.700 I common_perf_print:    graphs reused =         30\n0.04.731.701 I common_perf_print:   graph reallocs =          0    /     0        (same size) / (changed size)\n"
+}

@@ -1,0 +1,213 @@
+diff --git a/ggml/src/ggml-cpu/ggml-cpu.c b/ggml/src/ggml-cpu/ggml-cpu.c
+index a76af84..a561b87 100644
+--- a/ggml/src/ggml-cpu/ggml-cpu.c
++++ b/ggml/src/ggml-cpu/ggml-cpu.c
+@@ -16,6 +16,11 @@
+ #include "common.h"
+ #include "tiled/tiled.h"
+ 
++// MSR Phase 2 post-node hook (weak: absent in stock builds). Called on thread 0
++// after each graph node executes, allowing mapped weight pages to be revoked.
++__attribute__((weak)) void msr_streaming_node_done(struct ggml_tensor * node);
++__attribute__((weak)) void msr_streaming_node_start(struct ggml_tensor * node, const char * name);
++
+ #if defined(_MSC_VER) || defined(__MINGW32__)
+ #include <malloc.h> // using malloc.h with MSC/MINGW
+ #elif !defined(__FreeBSD__) && !defined(__NetBSD__) && !defined(__OpenBSD__)
+@@ -3143,6 +3148,18 @@ static thread_ret_t ggml_graph_compute_thread(void * data) {
+             continue;
+         }
+ 
++        // MSR Phase 2: refresh a streamed layer before its first node executes.
++        // Thread 0 does the I/O; all threads wait at the barrier so the refill
++        // is visible before any compute reads the shared stream buffer. This
++        // must run before the COMPUTE-flag filter: weight-binding hooks may be
++        // attached to nodes that are not flagged for compute.
++        if (msr_streaming_node_start) {
++            if (state->ith == 0) {
++                msr_streaming_node_start(node, node->name);
++            }
++            ggml_barrier(state->threadpool);
++        }
++
+         if ((node->flags & GGML_TENSOR_FLAG_COMPUTE) == 0) {
+             continue;
+         }
+@@ -3162,6 +3179,10 @@ static thread_ret_t ggml_graph_compute_thread(void * data) {
+             tp->ec    = GGML_STATUS_ABORTED;
+         }
+ 
++        if (state->ith == 0 && msr_streaming_node_done) {
++            msr_streaming_node_done(node);
++        }
++
+         if (node_n + 1 < cgraph->n_nodes) {
+             ggml_barrier(state->threadpool);
+         }
+diff --git a/src/llama-model-loader.cpp b/src/llama-model-loader.cpp
+index 548ade1..2786d3f 100644
+--- a/src/llama-model-loader.cpp
++++ b/src/llama-model-loader.cpp
+@@ -9,12 +9,19 @@
+ #include <algorithm>
+ #include <array>
+ #include <cinttypes>
++#include <cstddef>
+ #include <cstdint>
+ #include <cstring>
+ #include <future>
+ #include <regex>
+ #include <unordered_set>
+ 
++// MSR Phase 2 external-buffer hook (weak: absent in stock builds).
++// Returns true and fills *data when the caller supplies this tensor itself.
++extern "C" {
++__attribute__((weak)) bool msr_streaming_supply_tensor(const char * name, void ** data, size_t size);
++}
++
+ static const size_t kiB = 1024;
+ static const size_t MiB = 1024*kiB;
+ static const size_t GiB = 1024*MiB;
+@@ -1793,6 +1800,23 @@ bool llama_model_loader::load_all_data(
+ 
+         size_t n_size = ggml_nbytes(cur);
+ 
++        // MSR Phase 2: let the runtime bind an externally managed buffer for
++        // selected tensors. Stock builds leave the weak symbol unresolved.
++        void * external_data = nullptr;
++        if (msr_streaming_supply_tensor &&
++            msr_streaming_supply_tensor(ggml_get_name(cur), &external_data, n_size) &&
++            external_data != nullptr) {
++            if (cur->buffer != nullptr && !ggml_backend_buffer_is_host(cur->buffer)) {
++                ggml_backend_tensor_set(cur, external_data, 0, n_size);
++            } else if (cur->data == nullptr) {
++                cur->data = external_data;
++            } else {
++                ggml_backend_tensor_set(cur, external_data, 0, n_size);
++            }
++            size_done += n_size;
++            continue;
++        }
++
+         const bool from_mapping = use_mmap || lazy.has(cur);
+ 
+         if (from_mapping) {
+diff --git a/src/llama-model.cpp b/src/llama-model.cpp
+index 9801b4b..145754a 100644
+--- a/src/llama-model.cpp
++++ b/src/llama-model.cpp
+@@ -25,6 +25,16 @@
+ #include "ggml.h"
+ #include "ggml-cpp.h"
+ 
++#include <cstdlib>
++
++// MSR Phase 2 no-alloc binding hook (weak: absent in stock builds).
++// Returns true and a direct pointer for every weight tensor supplied by the
++// external bounded arena. Only called when the model is loaded with no_alloc.
++extern "C" {
++__attribute__((weak)) bool msr_streaming_bind_tensor(const char * name, size_t size, void ** data);
++__attribute__((weak)) bool msr_streaming_arena(void ** base, size_t * size);
++}
++
+ #include <algorithm>
+ #include <cassert>
+ #include <cfloat>
+@@ -1701,6 +1711,11 @@ bool llama_model_base::load_tensors(llama_model_loader & ml) {
+ 
+     const bool use_mmap_buffer = true;
+ 
++    // MSR Phase 2: externalize only the model weights. Unlike llama.cpp's own
++    // no_alloc flag this must not disable KV-cache or compute-buffer allocation.
++    const bool msr_external_weights = std::getenv("MSR_NO_ALLOC") != nullptr;
++    const bool weights_no_alloc = ml.no_alloc || msr_external_weights;
++
+     this->ml = &ml; // to be used by create_tensor() and load_arch_tensors()
+ 
+     if (ml.use_mmap && params.load_mode == LLAMA_LOAD_MODE_AUTO) {
+@@ -2052,9 +2067,9 @@ bool llama_model_base::load_tensors(llama_model_loader & ml) {
+         std::vector<ggml_backend_buffer_ptr> bufs;
+ 
+         // a lazy context is mapped whatever the load mode, but the memory-fit pass maps nothing
+-        const bool is_lazy_mapped = ctx_key.lazy && !ml.no_alloc;
++        const bool is_lazy_mapped = ctx_key.lazy && !weights_no_alloc;
+ 
+-        if ((ml.use_mmap || is_lazy_mapped) && use_mmap_buffer && buffer_from_host_ptr_supported && is_default_buft) {
++        if ((ml.use_mmap || is_lazy_mapped) && use_mmap_buffer && buffer_from_host_ptr_supported && is_default_buft && !weights_no_alloc) {
+             GGML_ASSERT(!ml.no_alloc);
+             const size_t max_size = ggml_get_max_tensor_size(ctx);
+ 
+@@ -2077,7 +2092,7 @@ bool llama_model_base::load_tensors(llama_model_loader & ml) {
+             }
+         } else {
+             ggml_backend_buffer_t buf;
+-            if (ml.no_alloc) {
++            if (weights_no_alloc) {
+                 buf = ggml_backend_buft_alloc_buffer(buft, /*size =*/ 0); // dummy buffer
+                 for (ggml_tensor * t = ggml_get_first_tensor(ctx); t != nullptr; t = ggml_get_next_tensor(ctx, t)) {
+                     t->buffer = buf; // set dummy buffer for weights so that the backend scheduler won't try to allocate them
+@@ -2146,7 +2161,23 @@ bool llama_model_base::load_tensors(llama_model_loader & ml) {
+         }
+     }
+ 
+-    if (ml.no_alloc) {
++    if (weights_no_alloc) {
++        if (msr_streaming_bind_tensor) {
++            for (auto & [ctx, bufs] : ctx_bufs) {
++                (void) bufs;
++                for (ggml_tensor * t = ggml_get_first_tensor(ctx); t != nullptr; t = ggml_get_next_tensor(ctx, t)) {
++                    void * data = nullptr;
++                    if (!msr_streaming_bind_tensor(ggml_get_name(t), ggml_nbytes(t), &data) || data == nullptr) {
++                        LLAMA_LOG_ERROR("%s: external arena did not supply tensor '%s' (%zu bytes)\n",
++                                __func__, ggml_get_name(t), ggml_nbytes(t));
++                        return false;
++                    }
++                    // Keep the CPU dummy buffer so the scheduler assigns the CPU
++                    // backend; point compute directly at the arena bytes.
++                    t->data = data;
++                }
++            }
++        }
+         return true;
+     }
+ 
+diff --git a/src/models/gemma3.cpp b/src/models/gemma3.cpp
+index 9520c3f..9bd4b03 100644
+--- a/src/models/gemma3.cpp
++++ b/src/models/gemma3.cpp
+@@ -1,5 +1,14 @@
+ #include "models.h"
+ 
++// MSR Phase 2 per-layer streaming hook (weak: absent in stock builds).
++// Called while the graph for each token is constructed, before that layer's
++// nodes are added, so an external provider can refresh its buffers.
++extern "C" {
++__attribute__((weak)) void msr_streaming_prepare_layer(int layer);
++__attribute__((weak)) void msr_streaming_layer_first_node(int layer, void * tensor, const char * name);
++__attribute__((weak)) void msr_streaming_layer_boundary(int layer, void * tensor);
++}
++
+ void llama_model_gemma3::load_arch_hparams(llama_model_loader & ml) {
+     const bool found_swa = ml.get_key(LLM_KV_ATTENTION_SLIDING_WINDOW, hparams.n_swa, false);
+     if (found_swa && hparams.n_swa > 0) {
+@@ -105,9 +114,12 @@ llama_model_gemma3::graph<iswa>::graph(const llm_graph_params & params) : llm_gr
+     ggml_tensor * inp_out_ids = build_inp_out_ids();
+ 
+     for (int il = 0; il < n_layer; ++il) {
++        if (msr_streaming_prepare_layer) msr_streaming_prepare_layer(il);
++
+         // norm
+         cur = build_norm(inpL, model.layers[il].attn_norm, NULL, LLM_NORM_RMS, il);
+         cb(cur, "attn_norm", il);
++        if (msr_streaming_layer_first_node) msr_streaming_layer_first_node(il, cur, ggml_get_name(cur));
+ 
+         // self-attention
+         {
+@@ -172,6 +184,7 @@ llama_model_gemma3::graph<iswa>::graph(const llm_graph_params & params) : llm_gr
+ 
+         cur = build_cvec(cur, il);
+         cb(cur, "l_out", il);
++        if (msr_streaming_layer_boundary) msr_streaming_layer_boundary(il, cur);
+ 
+         // input for next layer
+         inpL = cur;

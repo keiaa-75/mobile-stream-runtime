@@ -1,0 +1,8 @@
+{
+ "warm_sequential_mibs": 935.5,
+ "coldish_sequential_mibs": 1411.0,
+ "flushed_gib": 9.28,
+ "coldish_random16_median_mibs": 1338.0,
+ "coldish_random16_min_mibs": 1297.3,
+ "coldish_random16_max_mibs": 1500.6
+}
