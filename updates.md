@@ -548,6 +548,17 @@ Full write-up and caveats: `BENCHMARKS.md` §10. Raw data:
 `benchmarks/results/gate2-{stock,arena1g}-r{1,2,3}.{json,txt}` and
 `benchmarks/results/phase2-arena-{2g,1g}-2k.{json,txt}`. Both CTest targets pass.
 
+### Repository
+
+The project is now under version control and pushed to
+`https://github.com/RavinEduard/Mobility_Engine` (private, `main`). Vendored
+llama.cpp is a submodule pinned at `ef6bc6f`; the hook patch stays in
+`patches/` so the submodule is clean. Fresh clone:
+`git clone --recursive ... && scripts/setup.sh`. New `docs/PORTABILITY.md`
+records platform status: Android/arm64 tested; Linux/macOS expected but
+untested; Windows needs a Win32 file backend plus a `__attribute__((weak))`
+replacement (2–4 day estimate).
+
 ### Next step (not started)
 
 Phase 3 — asynchronous read queue + deterministic next-layer prefetch, measured
@@ -618,6 +629,17 @@ Full write-up and caveats: `BENCHMARKS.md` §11. Raw data:
 - No lower-RAM device tested; `token_embd` (525 MiB) sets a ~600–720 MiB floor.
 - Cancellation is tested but not yet wired to a runtime abort path.
 - mmproj/vision remains Phase 6.
+
+### Repository
+
+The project is now under version control and pushed to
+`https://github.com/RavinEduard/Mobility_Engine` (private, `main`). Vendored
+llama.cpp is a submodule pinned at `ef6bc6f`; the hook patch stays in
+`patches/` so the submodule is clean. Fresh clone:
+`git clone --recursive ... && scripts/setup.sh`. New `docs/PORTABILITY.md`
+records platform status: Android/arm64 tested; Linux/macOS expected but
+untested; Windows needs a Win32 file backend plus a `__attribute__((weak))`
+replacement (2–4 day estimate).
 
 ### Next step (not started)
 
