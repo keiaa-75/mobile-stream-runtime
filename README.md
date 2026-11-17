@@ -69,6 +69,8 @@ benchmarks/REDMI_TURBO_3_BENCHMARK.md   consolidated device results
 ARCHITECTURE.md         (next)
 docs/
   FRAMEWORK.md          C API reference, SDK build/consumption guide
+  setup-fedora.md       Fedora x86_64 setup guide
+  setup-lubuntu.md      Lubuntu x86_64 setup guide
   PORTABILITY.md        platform status: reference device / Linux / macOS / Windows
   streaming-design.md
   decisions/ADR-001-backend-integration.md

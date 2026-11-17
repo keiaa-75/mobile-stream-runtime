@@ -47,6 +47,10 @@ of the OS.
 
 ## Linux build and run
 
+Step-by-step distro guides: `docs/setup-fedora.md`, `docs/setup-lubuntu.md`.
+No emulator is needed; both build natively. x86_64 is expected to work but is
+not yet measured.
+
 ```sh
 cd ~/mobile-stream-runtime
 git submodule update --init --recursive
