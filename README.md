@@ -4,8 +4,6 @@ Standalone on-device inference-engine R&D: run supported local LLMs while
 **bounding peak RAM** by streaming quantized weights from storage into
 reusable buffers.
 
-Repository: <https://github.com/RavinEduard/Mobility_Engine> (private).
-
 This repository is a systems/inference project, not a medical product.
 
 - Canonical plan: `/storage/emulated/0/Download/gemma/DEVELOPMENT_PHASES.md`
